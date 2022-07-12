@@ -28,9 +28,10 @@ class User {
     const requiredFields = [
       'firstName',
       'lastName',
-      'phoneNumber',
       'email',
+      'phoneNumber',
       'password',
+      'role'
     ];
     requiredFields.forEach((field) => {
       if (!credentials.hasOwnProperty(field)) {
@@ -56,10 +57,11 @@ class User {
       last_name,
       email,
       phone_number,
-      hashedPassword
+      password,
+      role
     )
-    VALUES ($1, $2, $3, $4, $5)
-    RETURNING id, email, username, first_name, last_name, created_at;
+    VALUES ($1, $2, $3, $4, $5, $6)
+    RETURNING id, first_name, last_name, email, phone_number, role created_at;
     `,
       [
         credentials.firstName,
@@ -67,6 +69,7 @@ class User {
         lowerCaseEmail,
         credentials.phoneNumber,
         hashedPassword,
+        credentials.role,
       ]
     );
     const user = result.rows[0];

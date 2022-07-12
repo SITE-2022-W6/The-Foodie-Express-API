@@ -5,4 +5,4 @@ DROP DATABASE the_foodie_express;
 CREATE DATABASE the_foodie_express;
 \connect the_foodie_express;
 
-\i the-foodie-express-schema.sql
+\i foodie-express-schema.sql
