@@ -8,3 +8,7 @@ CREATE TABLE users (
   role TEXT NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_DATE
 );
+
+CREATE TABLE menus (
+  
+);

@@ -5,6 +5,7 @@ const cors = require('cors');
 const { NotFoundError } = require('./utils/errors')
 
 const authRoutes = require('./routes/auth');
+const menuRoutes = require('./routes/menu')
 
 const security = require('./middleware/security');
 
