@@ -5,6 +5,5 @@ CREATE TABLE users (
   email TEXT NOT NULL UNIQUE CHECK (POSITION('@' IN email) > 1),
   phone_number TEXT NOT NULL UNIQUE,
   password TEXT NOT NULL,
-  role TEXT NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_DATE
 );
