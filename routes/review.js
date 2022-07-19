@@ -3,9 +3,9 @@ const router = express.Router();
 
 const Review = require("../models/review")
 
-router.post('/create-post', async (req, res, next) => {
+router.post('/create-review', async (req, res, next) => {
     try {
-        const review = await new Review.createPost(req.body)
+        const review = await new Review.createReview(req.body)
         return res.status(201).json({ review })
     } catch(err) {
         next(err)
