@@ -18,8 +18,7 @@ class Review {
         return result.rows[0]
     }
 
-    static async getReviewById(reqBody) {
-        const id = reqBody.id
+    static async getReviewById(id) {
 
         if(!id) {
             throw new BadRequestError(`Missing id in req body`)
