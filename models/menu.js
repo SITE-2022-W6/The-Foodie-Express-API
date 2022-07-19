@@ -6,9 +6,13 @@ class Menu {
     static async getMenu(restaurantId) {
         //Get menu from database
         const result = db.query( `
-        SELECT 
-        `)
+        SELECT menu
+        FROM menus
+        WHERE restaurant_id = $1;       
+        `, 
+        [restaurantId])
 
+        return result.rows[0]
     }
 }
 
