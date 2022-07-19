@@ -1,14 +1,14 @@
-CREATE TABLE user (
+CREATE TABLE users (
   id SERIAL PRIMARY KEY,
   first_name TEXT NOT NULL,
   last_name TEXT NOT NULL,
   email TEXT NOT NULL UNIQUE CHECK (POSITION('@' IN email) > 1),
   phone_number TEXT NOT NULL UNIQUE,
   password TEXT NOT NULL,
-  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_DATE
+  created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE restaurant (
+CREATE TABLE restaurants (
   id SERIAL PRIMARY KEY,
   OpenMenu_id TEXT NOT NULL,
   name TEXT NOT NULL,
