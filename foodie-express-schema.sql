@@ -10,5 +10,8 @@ CREATE TABLE users (
 );
 
 CREATE TABLE menus (
-  
+  id SERIAL PRIMARY KEY,
+  restaurant_id INTEGER NOT NULL,
+  menu JSON NOT NULL,
+  FOREIGN KEY (restaurant_id) REFERENCES restaurants(id) ON DELETE CASCADE
 );
