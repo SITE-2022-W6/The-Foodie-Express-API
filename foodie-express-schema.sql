@@ -23,3 +23,10 @@ CREATE TABLE restaurant (
   restaurant_verbose TEXT NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_DATE
 );
+
+CREATE TABLE menus (
+  id SERIAL PRIMARY KEY,
+  restaurant_id TEXT NOT NULL,
+  menu JSON NOT NULL,
+  FOREIGN KEY (restaurant_id) REFERENCES restaurant(OpenMenu_id) ON DELETE CASCADE
+);
