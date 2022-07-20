@@ -10,7 +10,7 @@ CREATE TABLE users (
 
 CREATE TABLE restaurants (
   id SERIAL PRIMARY KEY,
-  OpenMenu_id TEXT NOT NULL,
+  OpenMenu_id TEXT NOT NULL UNIQUE,
   name TEXT NOT NULL,
   brief_description TEXT,
   phone TEXT NOT NULL,
@@ -27,7 +27,7 @@ CREATE TABLE restaurants (
 CREATE TABLE menus (
   id SERIAL PRIMARY KEY,
   restaurant_id TEXT NOT NULL,
-  menu JSON NOT NULL,
+  menu JSON[] NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_DATE,
   FOREIGN KEY (restaurant_id) REFERENCES restaurants(OpenMenu_id) ON DELETE CASCADE
 );
