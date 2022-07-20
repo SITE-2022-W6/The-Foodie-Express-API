@@ -26,21 +26,22 @@ CREATE TABLE restaurants (
 
 CREATE TABLE menus (
   id SERIAL PRIMARY KEY,
-  restaurant_id TEXT NOT NULL,
+  restaurant_id INTEGER NOT NULL,
   menu JSON NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_DATE,
-  FOREIGN KEY (restaurant_id) REFERENCES restaurants(OpenMenu_id) ON DELETE CASCADE
+  FOREIGN KEY (restaurant_id) REFERENCES restaurants(id) ON DELETE CASCADE
 );
 
 CREATE TABLE reviews (
   id SERIAL PRIMARY KEY,
   user_id INTEGER NOT NULL,
-  restaurant_id TEXT NOT NULL,
+  restaurant_id INTEGER NOT NULL,
   menu_item_name TEXT NOT NULL,
   rating INTEGER NOT NULL,
   content TEXT,
   --Optional image urls maybe
-  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_DATE,
-  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-  FOREIGN KEY (restaurant_id) REFERENCES restaurants(OpenMenu_id) ON DELETE CASCADE
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_DATE
+  --For testing and demo purposes the foreign key associations have been commented out
+  --FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  --FOREIGN KEY (restaurant_id) REFERENCES restaurants(id) ON DELETE CASCADE
 )
