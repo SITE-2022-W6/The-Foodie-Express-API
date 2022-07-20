@@ -6,6 +6,7 @@ const { NotFoundError } = require('./utils/errors')
 
 const authRoutes = require('./routes/auth');
 const menuRoutes = require('./routes/menu')
+const reviewRouter = require('./routes/review')
 
 const security = require('./middleware/security');
 
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use(security.extractUserFromJwt);
 
 app.use('/auth', authRoutes);
+app.use('/review', reviewRouter)
 
 app.get('/', async (req, res) => {
   res.status(200).json({ ping: 'pong' });

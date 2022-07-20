@@ -5,7 +5,7 @@ const Review = require("../models/review")
 
 router.post('/create-review', async (req, res, next) => {
     try {
-        const review = await new Review.createReview(req.body)
+        const review = await Review.createReview(req.body)
         return res.status(201).json({ review })
     } catch(err) {
         next(err)

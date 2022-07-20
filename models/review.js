@@ -1,3 +1,7 @@
+const db = require("../db")
+
+const { BadRequestError } = require("../utils/errors")
+
 class Review {
     static async createReview(content) {
         const requiredFields = ["user_id", "restaurant_id", "menu_item_name", "rating"];
@@ -12,7 +16,7 @@ class Review {
             `INSERT INTO reviews (user_id, restaurant_id, menu_item_name, rating)
              VALUES ($1, $2, $3, $4)
              RETURNING id, user_id, restaurant_id, menu_item_name, rating, content;`,
-            [content.id, content.user_id, content.menu_item_name, content.rating]
+            [content.user_id, content.restaurant_id, content.menu_item_name, content.rating]
         )
 
         return result.rows[0]
