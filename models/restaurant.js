@@ -87,8 +87,14 @@ class Restaurant {
 
                     console.log("OMresults.rows[0]:", OMresults.rows[0])
 
-                    console.log("data.menus", data.menus)
-                    Menu.insertMenu(data.id, data.menus)
+                    //Insert menu into database
+                    let menujson = {}
+                    data.menus.forEach((menu, index) => {
+                        menujson[index] = menu
+                    })
+                    console.log("menujson: ", menujson)
+                    // console.log("data.menus", data.menus)
+                    Menu.insertMenu(data.id, menujson)
 
                     return OMresults.rows[0]
                 })

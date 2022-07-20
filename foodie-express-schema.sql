@@ -27,7 +27,7 @@ CREATE TABLE restaurants (
 CREATE TABLE menus (
   id SERIAL PRIMARY KEY,
   restaurant_id TEXT NOT NULL,
-  menu JSON[] NOT NULL,
+  menu JSON NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_DATE,
   FOREIGN KEY (restaurant_id) REFERENCES restaurants(OpenMenu_id) ON DELETE CASCADE
 );

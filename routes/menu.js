@@ -11,7 +11,7 @@ router.get('/:restaurantId', async (req, res, next) => {
         //Pass in the restaurant id that you want the menu for
         //menu will hold the menu for that restaurant
         const menu = await Menu.getMenu(req.params.restaurantId)
-        console.log(JSON.parse(menu.menu[0]))
+        console.log(menu)
         return res.status(200).json({ menu })
     }
     catch (err) {

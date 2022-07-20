@@ -14,7 +14,7 @@ class Menu {
             [restaurantId])
 
         console.log("result.rows.length: ", result.rows.length)
-        return result.rows.length != 0 ? result.rows[0] : new NotFoundError
+        return result.rows[0]
     }
 
     static async insertMenu(restaurantId, menu = []) {
@@ -25,7 +25,7 @@ class Menu {
             restaurant_id,
             menu 
         )
-        VALUES ($1, $2::json[])
+        VALUES ($1, $2)
         RETURNING
             id,
             restaurant_id,
