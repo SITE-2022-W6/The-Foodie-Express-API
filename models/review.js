@@ -26,13 +26,13 @@ class Review {
             }
         })
         // Auxiliary array for building db query
-        const valuesIndices = columns.map((e, ind) => (`$${ind+1}`))
+        const valuesIndices = Object.keys(columns).map((e, ind) => (`$${ind+1}`))
         // Query the db and store results
         const result = await db.query(
             `INSERT INTO reviews (${ Object.keys(columns).toString() })
              VALUES (${ valuesIndices.toString() })
              RETURNING id, user_id, restaurant_id, menu_item_name, rating, content;`,
-            [Object.values(columns)]
+            Object.values(columns)
         )
         
         return result.rows[0]
