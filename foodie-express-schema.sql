@@ -20,7 +20,7 @@ CREATE TABLE restaurants (
   cuisine_type_primary TEXT NOT NULL,
   operating_days TEXT NOT NULL,
   operating_days_printable TEXT NOT NULL,
-  restaurant_verbose TEXT NOT NULL,
+  restaurant_verbose JSON NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_DATE
 );
 

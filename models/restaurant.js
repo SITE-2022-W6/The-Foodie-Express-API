@@ -17,6 +17,7 @@ class Restaurant {
             [id])
         // console.log("results: ",results)
         //If restaurant is not in database
+        console.log("results.rows.length", results.rows.length)
         if (results.rows.length == 0) {
             //Make a get request to OpenMenu API
             //Get restuarant details
@@ -24,7 +25,7 @@ class Restaurant {
             //Store menu into menu database
             //return restaurant details
 
-            axios.get(`https://openmenu.com/api/v2/restaurant.php?key=${OM_API_KEY}&id=${id}`)
+            return axios.get(`https://openmenu.com/api/v2/restaurant.php?key=${OM_API_KEY}&id=${id}`)
                 .then(async (response) => {
                     //console.log("response:", response.data.response.result)
                     //Shortening variable names
@@ -85,17 +86,17 @@ class Restaurant {
                             verbose
                         ])
 
-                    console.log("OMresults.rows[0]:", OMresults.rows[0])
 
                     //Insert menu into database
                     let menujson = {}
                     data.menus.forEach((menu, index) => {
                         menujson[index] = menu
                     })
-                    console.log("menujson: ", menujson)
+                    // console.log("menujson: ", menujson)
                     // console.log("data.menus", data.menus)
                     Menu.insertMenu(data.id, menujson)
-
+                    // console.log("About to return")
+                    // console.log("OMresults.rows[0]:", OMresults.rows[0])
                     return OMresults.rows[0]
                 })
                 .catch((err) => {
@@ -105,6 +106,7 @@ class Restaurant {
         //restuarant is in database
         else {
             //return restaurant details
+            // console.log("Am I here?")
             return results.rows[0]
         }
     }

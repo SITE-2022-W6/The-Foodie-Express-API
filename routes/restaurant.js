@@ -18,7 +18,8 @@ router.get('/:id', async (req, res, next) => {
     try {
         console.log("Getting restaurant by id")
         const restaurant = await Restaurant.getRestaurantById(req.params.id)
-        return res.status(200).json({ restaurant })
+        // console.log("restaurant: ", await restaurant)
+        return res.status(200).json({restaurant})
     }catch (err) {
         next(err)
     }

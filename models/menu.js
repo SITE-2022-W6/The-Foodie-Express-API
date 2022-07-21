@@ -5,7 +5,7 @@ class Menu {
 
     static async getMenu(restaurantId) {
         //Get menu from database
-        console.log("in menus")
+        // console.log("in menus")
         const result = await db.query(`
         SELECT menu
         FROM menus
@@ -18,7 +18,7 @@ class Menu {
     }
 
     static async insertMenu(restaurantId, menu = []) {
-        console.log("Inserting menu")
+        // console.log("Inserting menu")
         const result = await db.query(`
         INSERT INTO menus
         (
