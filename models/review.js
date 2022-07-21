@@ -19,8 +19,6 @@ class Review {
     }
 
     static async getReviewById(id) {
-
-
         if(!id) {
             throw new BadRequestError(`Missing id in req body`)
         }
