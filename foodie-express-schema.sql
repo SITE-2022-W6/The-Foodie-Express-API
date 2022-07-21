@@ -10,7 +10,7 @@ CREATE TABLE users (
 
 CREATE TABLE restaurants (
   id SERIAL PRIMARY KEY,
-  OpenMenu_id TEXT NOT NULL,
+  OpenMenu_id TEXT NOT NULL UNIQUE,
   name TEXT NOT NULL,
   brief_description TEXT,
   phone TEXT NOT NULL,
@@ -20,7 +20,7 @@ CREATE TABLE restaurants (
   cuisine_type_primary TEXT NOT NULL,
   operating_days TEXT NOT NULL,
   operating_days_printable TEXT NOT NULL,
-  restaurant_verbose TEXT NOT NULL,
+  restaurant_verbose JSON NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_DATE
 );
 
