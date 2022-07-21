@@ -4,6 +4,10 @@ const { BadRequestError } = require("../utils/errors")
 
 class Review {
     static async createReview(content) {
+        if(!content) {
+            return 5000
+        }
+
         const requiredFields = ["user_id", "restaurant_id", "menu_item_name", "rating"];
         requiredFields.forEach(field => {
             if (!content.hasOwnProperty(field)){
