@@ -4,9 +4,10 @@ const cors = require('cors');
 
 const { NotFoundError } = require('./utils/errors')
 
-const authRoutes = require('./routes/auth');
+const authRoutes = require('./routes/auth')
 const menuRoutes = require('./routes/menu')
 const restaruantRoutes = require('./routes/restaurant')
+const reviewRoutes = require('./routes/review')
 
 const security = require('./middleware/security');
 
@@ -18,9 +19,10 @@ app.use(express.json());
 
 app.use(security.extractUserFromJwt);
 
-app.use('/auth', authRoutes);
+app.use('/auth', authRoutes)
 app.use('/menu', menuRoutes)
 app.use('/restaurant', restaruantRoutes)
+app.use('/review', reviewRoutes)
 
 app.get('/', async (req, res) => {
   res.status(200).json({ ping: 'pong' });
