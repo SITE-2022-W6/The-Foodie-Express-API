@@ -6,6 +6,44 @@ const Menu = require('./menu');
 const OM_API_KEY = process.env.OPENMENU_API_KEY
 
 class Restaurant {
+    static async getMenuByRestaurantName(restaurantName, city='', postal_code=0) {
+        const result = await db.query(
+            `SELECT * FROM menus 
+                LEFT JOIN restaurants 
+                ON restaurants.id = menus.restaurant_id
+            WHERE restaurants.name = "${restaurantName}"`,
+            [restaurantName]
+        )
+    
+        if(!result.rows.length == 0) {
+            return result.rows[0]
+        } else {
+            const apiCallResponse = apiCallForRestaurantByName(restaurantName, city, postal_code)
+            const dbInsertResponse = addRestaurantToDb(apiCallResponse)
+            return dbInsertResponse
+        }
+    }
+    static async apiCallForRestaurantByName(restaurantName, city, postal_code) {
+        const location = ''
+        if(city=='' && postal_code==0) {
+            throw new BadRequestError('CITY OR POSTAL CODE MISSING')
+        }
+        if(city!='') {
+            location = 'city'
+        }
+        if(postal_code!=0) {
+            location = 'postal_code'
+        }
+
+        return axios.get(`https://openmenu.com/api/v2/location.php?key=${OM_API_KEY}&country=us&${location}=${location=='city'?city:postal_code}&s=${restaurantName}`)
+                    .catch((err) => {
+                        console.log(err)
+                    })
+    }
+    static async addRestaurantToDb(apiCallResponse) {
+
+    }
+
     //Gets a restaurant by its OpenMenu id
     static async getRestaurantById(id) {
         //First check the database to see if it is stored
@@ -106,14 +144,23 @@ class Restaurant {
         //restuarant is in database
         else {
             //return restaurant details
-            // console.log("Am I here?")
+            // console.log( "Am I here?" )
             return results.rows[0]
         }
     }
 
-    // static async getRestaurantByOpenMenuId(OpenMenuId) {
+    static async getMenuItemById() {
 
-    // }
+    }
+
+    static async getMenuItemByRestaurantId() {
+
+    }
+    // Returns an array of menu items given OpenMenu API response data
+    static async getMenuItems(data) {
+        const data = response.data.response.result
+
+    }
 }
 
 module.exports = Restaurant

@@ -4,7 +4,7 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
     res.status(200).json({ ping: 'menu' });
-  });
+})
 
 router.get('/:restaurantId', async (req, res, next) => {
     try {
