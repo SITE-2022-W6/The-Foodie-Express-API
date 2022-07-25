@@ -18,12 +18,13 @@ class Restaurant {
         if(!result.rows.length == 0) {
             return result.rows[0]
         } else {
-            const apiCallResponse = apiCallForRestaurantByName(restaurantName, city, postal_code)
-            const dbInsertResponse = addRestaurantToDb(apiCallResponse)
+            const apiRestaurantId = apiSearchForRestaurantByName(restaurantName, city, postal_code)
+            const apiRestaurant = this.apiRestaurantInfo(apiRestaurantId)
+            const dbInsertResponse = addRestaurantToDb(apiRestaurant)
             return dbInsertResponse
         }
     }
-    static async apiCallForRestaurantByName(restaurantName, city, postal_code) {
+    static async apiSearchForRestaurantByName(restaurantName, city, postal_code) {
         const location = ''
         // Check for city or postal_code, throw an error if none was passed
         if(city=='' && postal_code==0) {
@@ -42,8 +43,18 @@ class Restaurant {
                 console.log(err)
             })
         
+        return result.data.response.result.restaurants[0].id
+    }
+
+    static async apiRestaurantInfo(id) {
+        const result = await axios.get(`https://openmenu.com/api/v2/location.php?key=${OM_API_KEY}&country=us&${location}=${location=='city'?city:postal_code}&s=${restaurantName}`)
+            .catch((err) => {
+                console.log(err)
+            })
+        
         return result.data.response.result
     }
+
     static async addRestaurantToDb(data) {
         // Set restaurant values
         let OpenMenu_id = data.id

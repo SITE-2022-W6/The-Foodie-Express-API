@@ -16,11 +16,18 @@ router.get('/', async (req, res) => {
 //if it is not, makes a call to api and stores the data
 router.get('/:id', async (req, res, next) => {
     try {
-        console.log("Getting restaurant by id")
         const restaurant = await Restaurant.getRestaurantById(req.params.id)
-        // console.log("restaurant: ", await restaurant)
         return res.status(200).json({restaurant})
     }catch (err) {
+        next(err)
+    }
+})
+
+router.get('/search', async (req, res, next) => {
+    try {
+        const menu = await Restaurant.getMenuByRestaurantName(req.params.restaurant_name, req.query.city, req.query.postal_code)
+        return res.status(200).json({menu})
+    } catch(err) {
         next(err)
     }
 })
