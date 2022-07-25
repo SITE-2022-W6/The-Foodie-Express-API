@@ -81,7 +81,7 @@ class Restaurant {
         return dbResponse.rows[0]
     }
     static async addMenusToDb(menus, restaurant_id) {
-        menus.forEach((menu) => { 
+        menus.forEach(async (menu) => { 
             // Set menu values
             let name = menu.menu_name
             let descrption = menu.menu_description
@@ -99,7 +99,7 @@ class Restaurant {
     static async addItemsToDb(groups, menu_id) {
         groups.forEach((group) => {
             let group_name = group.group_name
-            group.menu_items.forEach((item) => {
+            group.menu_items.forEach(async (item) => {
                 let name = item.menu_item_name
                 let description = item.menu_item_descrption
                 let price = item.menu_item_price
