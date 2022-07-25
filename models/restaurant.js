@@ -75,8 +75,9 @@ class Restaurant {
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
         RETURNING *`, 
         [id, OpenMenu_id, name, brief_description, phone, fax, address_1, address_2, cuisine_type_primary, operating_days, operating_days_printable, restaurant_verbose])
-
-        this.addMenusToDb(data.menus, dbResponse.rows[0].id)
+        
+        Menu.insertMenu(data.menus, dbResponse.rows[0].id)
+        //this.addMenusToDb(data.menus, dbResponse.rows[0].id)
 
         return dbResponse.rows[0]
     }
