@@ -37,6 +37,7 @@ class Review {
         
         return result.rows[0]
     }
+    /* HELPER FUNCTIONS */
 
     static async getReviewById(id) {
         // Check if id exists, if not throw an error
