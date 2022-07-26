@@ -7,14 +7,15 @@ const OM_API_KEY = process.env.OPENMENU_API_KEY
 
 class Restaurant {
     static async getMenuByRestaurantName(restaurantName, city='', postal_code=0) {
-        //console.log("getMenuByRestaurantName: ", restaurantName, city, postal_code)
+        console.log("getMenuByRestaurantName: ", restaurantName, city, postal_code)
         const result = await db.query(
             `SELECT restaurants.id,restaurants.name,menus.id,items.group_name,items.id,items.name 
             FROM restaurants  
                 LEFT JOIN menus 
                 ON restaurants.id=menus.restaurant_id
                 LEFT JOIN items 
-                ON menus.id=items.menu_id`
+                ON menus.id=items.menu_id
+            WHERE LOWER(restaurants.name) LIKE '%${restaurantName.replace(/[^a-zA-Z0-9 ]/g, '')}%'`
         )
         //console.log("db results: ", result.rows)
         if(result.rows.length>0) {
