@@ -136,7 +136,7 @@ class Restaurant {
         })
     }
 
-    static async getMenuByRestaurantId(id) {
+    static async getMenusByRestaurantId(id) {
         const result = await db.query(
             `SELECT * FROM menus 
                 LEFT JOIN items 
