@@ -36,7 +36,7 @@ router.get('/location/:state/:city', async (req,res,next) => {
 //Search for restaurant menu
 router.get('/search', async (req, res, next) => {
     try {
-        console.log(req.query.restaurant_name, req.query.postal_code, req.query.city)
+        //console.log(req.query.restaurant_name, req.query.postal_code, req.query.city)
         const menu = await Restaurant.getMenuByRestaurantName(req.query.restaurant_name, req.query.city, req.query.postal_code)
         return res.status(200).json({menu})
     } catch(err) {
