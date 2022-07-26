@@ -14,7 +14,7 @@ CREATE TABLE restaurants (
   name TEXT NOT NULL,
   brief_description TEXT,
   phone TEXT NOT NULL,
-  fax TEXT NOT NULL,
+  fax TEXT,
   address_1 TEXT NOT NULL,
   address_2 TEXT,
   cuisine_type_primary TEXT NOT NULL,
