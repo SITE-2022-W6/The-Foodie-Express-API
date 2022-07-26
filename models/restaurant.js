@@ -142,6 +142,11 @@ class Restaurant {
     static async getMenuItemsByRestaurantId() {
 
     }
+
+    static async getRestaurantsByLocation(state, city) {
+        const results = await axios.get(`https://openmenu.com/api/v2/location.php?key=${OM_API_KEY}&country=us&state=${state}&city=${city}`)
+        return results.data.response.result.restaurants
+    }
 }
 
 module.exports = Restaurant
