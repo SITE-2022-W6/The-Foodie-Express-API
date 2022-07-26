@@ -7,7 +7,7 @@ const OM_API_KEY = process.env.OPENMENU_API_KEY
 
 class Restaurant {
     static async getMenuByRestaurantName(restaurantName, city='', postal_code=0) {
-        console.log("getMenuByRestaurantName: ", restaurantName, city, postal_code)
+        //console.log("getMenuByRestaurantName: ", restaurantName, city, postal_code)
         const result = await db.query(
             `SELECT restaurants.id,restaurants.name,menus.id,items.group_name,items.id,items.name 
             FROM restaurants  
@@ -16,11 +16,11 @@ class Restaurant {
                 LEFT JOIN items 
                 ON menus.id=items.menu_id`
         )
-        console.log("db results: ", result.rows)
+        //console.log("db results: ", result.rows)
         if(result.rows.length>0) {
             return result.rows
         } else {
-            console.log("db has no such entry, resorting to api calls: ")
+            //console.log("db has no such entry, resorting to api calls: ")
             const apiRestaurantId = await this.apiSearchForRestaurantByName(restaurantName, city, postal_code)
             if(!apiRestaurantId) { throw new BadRequestError("No restaurant id found") }
             const apiRestaurant = await this.apiRestaurantInfo(apiRestaurantId)
@@ -29,7 +29,7 @@ class Restaurant {
         }
     }
     static async apiSearchForRestaurantByName(restaurantName, city, postal_code) {
-        console.log("apiSearchForRest: ", restaurantName, city, postal_code)
+        //console.log("apiSearchForRest: ", restaurantName, city, postal_code)
         let location = ''
         // Check for city or postal_code, throw an error if none was passed
         if(city=='' && postal_code==0) {
@@ -43,22 +43,22 @@ class Restaurant {
             location = 'postal_code'
         }
         let loc = (location=='city')?city:postal_code
-        console.log("location:", location, city, postal_code, loc, restaurantName, OM_API_KEY)
+        //console.log("location:", location, city, postal_code, loc, restaurantName, OM_API_KEY)
         const result = await axios.get(`https://openmenu.com/api/v2/location.php?key=${OM_API_KEY}&country=us&${location}=${loc}&s=${restaurantName}`)
             .catch((err) => {
-                console.log(err)
+                //console.log(err)
             })
-        console.log(result.data.response.result.restaurants[0].id)
+        //console.log(result.data.response.result.restaurants[0].id)
         return result.data.response.result.restaurants[0].id
     }
 
     static async apiRestaurantInfo(id) {
-        console.log("in apiRestaurantInfo: id:", id)
+        //console.log("in apiRestaurantInfo: id:", id)
         const result = await axios.get(`https://openmenu.com/api/v2/restaurant.php?key=${OM_API_KEY}&id=${id}`)
             .catch((err) => {
-                console.log(err)
+                //console.log(err)
             })
-        console.log("Restaurant info:", result.data.response.result)
+        //console.log("Restaurant info:", result.data.response.result)
         return result.data.response.result
     }
 
@@ -96,11 +96,11 @@ class Restaurant {
         
         Menu.insertMenu(data.menus, dbResponse.rows[0].id)
         //this.addMenusToDb(data.menus, dbResponse.rows[0].id)
-        console.log("end of addRestauranttoDB ------- ")
+        //console.log("end of addRestauranttoDB ------- ")
         return dbResponse.rows[0]
     }
     static async addMenusToDb(menus, restaurant_id) {
-        console.log("adding menus to db ------ restaurant_id:", restaurant_id)
+        //console.log("adding menus to db ------ restaurant_id:", restaurant_id)
         menus.forEach(async (menu) => { 
             // Set menu values
             let name = menu.menu_name
@@ -112,7 +112,7 @@ class Restaurant {
             VALUES ($1, $2, $3, $4)
             RETURNING *`, 
             [restaurant_id, name, descrption, menu_verbose])
-            console.log("addMenustoDb done, moving on to addItemsToDb ------ ")
+            //console.log("addMenustoDb done, moving on to addItemsToDb ------ ")
             this.addItemsToDb(menu.menu_groups, dbResponse.rows[0].id)
          })
     }
