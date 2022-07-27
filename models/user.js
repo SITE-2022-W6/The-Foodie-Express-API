@@ -59,7 +59,7 @@ class User {
       password
     )
     VALUES ($1, $2, $3, $4, $5)
-    RETURNING id, first_name, last_name, email, phone_number created_at;
+    RETURNING *
     `,
       [
         credentials.firstName,

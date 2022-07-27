@@ -47,11 +47,20 @@ class Review {
 
         // Query the db and store results
         const result = await db.query(
-            `SELECT * FROM reviews WHERE id=$1;`,
-            [id]
+            `SELECT * FROM reviews WHERE id=${id}`
         )
         
         return result.rows[0]
+    }
+
+    static async updateReview(id, column, content) {
+        if(!id) {
+            throw new BadRequestError('updateReview error: No Id')
+        }
+
+        await db.query(
+            `UPDATE reviews SET ${column}=${content.column} WHERE id='${id}'`
+        )
     }
 }
 

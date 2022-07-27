@@ -21,4 +21,13 @@ router.get('/:id', async (req, res, next) => {
     }
 })
 
+router.put('/:id/:column', async (req, res, next) => {
+    try {
+        await Review.updateReview(req.params.id, req.params.column, req.body)
+        return res.status(200).json({ "Update Status":"Successful"} )
+    } catch(err) {
+        next(err)
+    }
+})
+
 module.exports = router

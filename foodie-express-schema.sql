@@ -57,6 +57,6 @@ CREATE TABLE reviews (
   --Optional image urls maybe
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_DATE
   --For testing and demo purposes the foreign key associations have been commented out
-  --FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-  --FOREIGN KEY (restaurant_id) REFERENCES restaurants(id) ON DELETE CASCADE
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (restaurant_id) REFERENCES restaurants(id) ON DELETE CASCADE
 );
