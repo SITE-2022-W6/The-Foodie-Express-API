@@ -8,7 +8,7 @@ const OM_API_KEY = process.env.OPENMENU_API_KEY
 class Restaurant {
     //Checks database for restaurant, if it can't find it, makes call to api
     static async getMenuByRestaurantName(restaurantName, city='', postal_code=0) {
-        // console.log("getMenuByRestaurantName: ", restaurantName, city, postal_code)
+        //console.log("getMenuByRestaurantName: ", restaurantName, city, postal_code)
         const result = await db.query(
             `SELECT restaurants.id,restaurants.name,menus.id,items.group_name,items.id,items.name, items.description, items.price, items.calories 
             FROM restaurants  
@@ -106,12 +106,19 @@ class Restaurant {
         //console.log("end of addRestauranttoDB ------- ")
         return returntype === "restaurant" ? dbResponse.rows[0] : menuList
     }
-    
-    static async getMenuItemById() {
 
+    static async getMenusByRestaurantId(id) {
+        const result = await db.query(
+            `SELECT * FROM menus 
+                LEFT JOIN items 
+                ON menus.id=items.menu_id
+            WHERE menus.restaurant_id='${id}'`
+        )
+
+        return result.rows
     }
 
-    static async getMenuItemsByRestaurantId() {
+    static async getMenuItemById() {
 
     }
 
