@@ -4,7 +4,7 @@ const { NotFoundError } = require('../utils/errors')
 class Menu {
     static async insertMenu(menus, restaurant_id) {
         //Returns nested array of Promises
-        const Promises = await menus.map(async (menu) => { 
+        const menu = await menus.map(async (menu) => { 
             // Set menu values
             let name = menu.menu_name
             let description = menu.menu_description
@@ -16,26 +16,21 @@ class Menu {
             RETURNING *`, 
             [restaurant_id, name, description, menu_verbose])
 
-            const menuGroup = await this.addItemsToDb(menu.menu_groups, dbResponse.rows[0].id)
-            return menuGroup
-         })
-         //Waits for promises to resolve. Nested Array of menu items
-         const menuNestedArr = await Promise.all(Promises)
+            // console.log("menu_verbose: ", menu_verbose)
 
-         //Rearranges menu items into 1 array
-         let menuArr = []
-         menuNestedArr.forEach((menu) => {
-            menu.forEach((group) => {
-                group.forEach((item) => {
-                    menuArr.push(item)
-                })
-            })
+            let menuObj = {}
+            menuObj.menu_name = name
+            menuObj.menu_description = description
+            menuObj.menu_groups = await this.addItemsToDb(menu.menu_groups, dbResponse.rows[0].id)
+            return menuObj
          })
+         //Waits for promises to resolve.
+         const menuArr = await Promise.all(menu)
          return menuArr
     }
     
     static async addItemsToDb(groups, menu_id) {
-        const returnGroup = await groups.map(async (group) => {
+        const menuGroups = await groups.map(async (group) => {
 
             let group_name = group.group_name
             const groupMenuItems = await group.menu_items.map(async (item) => {
@@ -48,15 +43,19 @@ class Menu {
                 const dbResponse = await db.query(`
                 INSERT INTO items (menu_id, group_name, name, description, price, calories, item_verbose)
                 VALUES ($1, $2, $3, $4, $5, $6, $7)
-                RETURNING id, name, group_name, description, price, calories`, 
+                RETURNING id, name, description, price, calories`, 
                 [menu_id, group_name, name, description, price, calories, item_verbose])
 
                 
                 return dbResponse.rows[0]
             })
-            return await Promise.all(groupMenuItems)
+            let groupObj = {}
+            groupObj.group_name = group_name
+            groupObj.group_description = group.group_description
+            groupObj.menu_items = await Promise.all(groupMenuItems)
+            return groupObj
         })
-        return Promise.all(returnGroup)
+        return Promise.all(menuGroups)
     }
 
     //Get Menu from id

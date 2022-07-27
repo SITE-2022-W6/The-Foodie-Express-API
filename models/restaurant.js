@@ -10,17 +10,19 @@ class Restaurant {
     static async getMenuByRestaurantName(restaurantName, city='', postal_code=0) {
         //console.log("getMenuByRestaurantName: ", restaurantName, city, postal_code)
         const result = await db.query(
-            `SELECT restaurants.id,restaurants.name,menus.id,items.group_name,items.id,items.name, items.description, items.price, items.calories 
+            `SELECT menus.menu_verbose 
             FROM restaurants  
                 LEFT JOIN menus 
                 ON restaurants.id=menus.restaurant_id
-                LEFT JOIN items 
-                ON menus.id=items.menu_id
             WHERE LOWER(restaurants.name) LIKE '%${restaurantName.replace(/[^a-zA-Z0-9 ]/g, '')}%'`
         )
         //console.log("db results: ", result.rows)
         if(result.rows.length>0) {
-            return result.rows
+            const menu = result.rows.map((menu_verbose) =>
+                {
+                    return menu_verbose.menu_verbose
+                })
+            return menu
         } else {
             //console.log("db has no such entry, resorting to api calls: ")
             const apiRestaurantId = await this.apiSearchForRestaurantByName(restaurantName, city, postal_code)
@@ -100,11 +102,13 @@ class Restaurant {
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
         RETURNING *`, 
         [OpenMenu_id, name, brief_description, phone, fax, address_1, address_2, cuisine_type_primary, operating_days, operating_days_printable, restaurant_verbose])
-        
+
+        const restaurant_info = data.restaurant_info
         const menuList = await Menu.insertMenu(data.menus, dbResponse.rows[0].id)
+
         //this.addMenusToDb(data.menus, dbResponse.rows[0].id)
         //console.log("end of addRestauranttoDB ------- ")
-        return returntype === "restaurant" ? dbResponse.rows[0] : menuList
+        return returntype === "restaurant" ? dbResponse.rows[0] : {restaurant_info, menu: menuList}
     }
 
     static async getMenusByRestaurantId(id) {
@@ -124,18 +128,28 @@ class Restaurant {
         //Else, make a call to the api and get the restaurant
         //Then return the menu
         const result = await db.query(
-            `SELECT restaurants.id,restaurants.name,menus.id,items.group_name,items.id,items.name, items.description, items.price, items.calories 
+            `SELECT menus.menu_verbose 
             FROM restaurants  
                 LEFT JOIN menus 
                 ON restaurants.id=menus.restaurant_id
-                LEFT JOIN items 
-                ON menus.id=items.menu_id
             WHERE restaurants.OpenMenu_id = $1`,
             [OMId]
         )
         //console.log("db results: ", result.rows)
         if(result.rows.length>0) {
-            return result.rows
+            const restaurant_verbose = await db.query(
+                `SELECT restaurant_verbose
+                FROM restaurants
+                WHERE restaurants.OpenMenu_id = $1`,
+                [OMId]
+            )
+            console.log("restaurant_info: ",restaurant_verbose.rows[0].restaurant_verbose.restaurant_info)
+            const restaurant_info = restaurant_verbose.rows[0].restaurant_verbose.restaurant_info
+            const menu = result.rows.map((menu_verbose) =>
+                {
+                    return menu_verbose.menu_verbose
+                })
+            return {restaurant_info, menu}
         }
         else
         {

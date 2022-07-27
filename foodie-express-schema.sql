@@ -29,7 +29,7 @@ CREATE TABLE menus (
   restaurant_id INTEGER NOT NULL,
   menu_name TEXT,
   menu_description TEXT,
-  menu_verbose TEXT NOT NULL,
+  menu_verbose JSON NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_DATE,
   FOREIGN KEY (restaurant_id) REFERENCES restaurants(id) ON DELETE CASCADE
 );
@@ -42,7 +42,7 @@ CREATE TABLE items (
   description TEXT,
   price INTEGER,
   calories INTEGER,
-  item_verbose TEXT NOT NULL,
+  item_verbose JSON NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_DATE,
   FOREIGN KEY (menu_id) REFERENCES menus(id) ON DELETE CASCADE
 );
@@ -55,7 +55,7 @@ CREATE TABLE reviews (
   rating INTEGER NOT NULL,
   content TEXT,
   --Optional image urls maybe
-  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_DATE
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_DATE,
   --For testing and demo purposes the foreign key associations have been commented out
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   FOREIGN KEY (restaurant_id) REFERENCES restaurants(id) ON DELETE CASCADE
