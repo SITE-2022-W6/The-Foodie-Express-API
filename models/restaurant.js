@@ -118,8 +118,31 @@ class Restaurant {
         return result.rows
     }
 
-    static async getMenuItemById() {
-
+    static async getMenuByOpenMenuId(OMId) {
+        //Check if restaurant id is in database
+        //if it is, return its menu
+        //Else, make a call to the api and get the restaurant
+        const result = await db.query(
+            `SELECT restaurants.id,restaurants.name,menus.id,items.group_name,items.id,items.name, items.description, items.price, items.calories 
+            FROM restaurants  
+                LEFT JOIN menus 
+                ON restaurants.id=menus.restaurant_id
+                LEFT JOIN items 
+                ON menus.id=items.menu_id
+            WHERE restaurants.OpenMenu_id = $1`,
+            [OMId]
+        )
+        //console.log("db results: ", result.rows)
+        if(result.rows.length>0) {
+            return result.rows
+        }
+        else
+        {
+            const apiRestaurant = await this.apiRestaurantInfo(OMId)
+            const dbInsertResponse = await this.addRestaurantToDb(apiRestaurant, "menu")
+            
+            return dbInsertResponse
+        }
     }
 
     static async getRestaurantsByLocation(state, city) {

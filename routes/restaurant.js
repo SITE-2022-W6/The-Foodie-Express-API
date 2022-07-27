@@ -45,4 +45,15 @@ router.get('/search', async (req, res, next) => {
     }
 })
 
+//Search for menu by OpenMenuId
+router.get('/search/OM/:OMId', async (req, res, next) => {
+    try {
+        const menu = await Restaurant.getMenuByOpenMenuId(req.params.OMId)
+        return res.status(200).json({menu})
+    } catch(err) {
+
+        next(err)
+    }
+})
+
 module.exports = router;
