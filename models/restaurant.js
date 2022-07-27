@@ -122,6 +122,7 @@ class Restaurant {
         //Check if restaurant id is in database
         //if it is, return its menu
         //Else, make a call to the api and get the restaurant
+        //Then return the menu
         const result = await db.query(
             `SELECT restaurants.id,restaurants.name,menus.id,items.group_name,items.id,items.name, items.description, items.price, items.calories 
             FROM restaurants  
