@@ -8,13 +8,7 @@ const OM_API_KEY = process.env.OPENMENU_API_KEY
 class Restaurant {
     //Checks database for restaurant, if it can't find it, makes call to api
     static async getMenuByRestaurantName(restaurantName, city='', postal_code=0) {
-<<<<<<< HEAD
         //console.log("getMenuByRestaurantName: ", restaurantName, city, postal_code)
-=======
-
-        //console.log("getMenuByRestaurantName: ", restaurantName, city, postal_code)
-
->>>>>>> 115592e9f1438f33c9a1acf8423681e162e37afa
         const result = await db.query(
             `SELECT restaurants.id,restaurants.name,menus.id,items.group_name,items.id,items.name, items.description, items.price, items.calories 
             FROM restaurants  
