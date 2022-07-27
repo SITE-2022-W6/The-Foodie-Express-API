@@ -54,13 +54,21 @@ class Review {
     }
 
     static async updateReview(id, column, content) {
-        if(!id) {
-            throw new BadRequestError('updateReview error: No Id')
-        }
+        this.checkForId(id)
 
         await db.query(
             `UPDATE reviews SET ${column}=${content.column} WHERE id='${id}'`
         )
+    }
+
+    static async deleteReview(id) {
+        this.checkForId(id)
+        await db.query( `DELETE FROM reviews WHERE reviews.id='${id}'`)
+    }
+
+    /* ---- Helpers ---- */
+    static async checkForId(id) {
+        if(!id) { throw new BadRequestError('No ID') }
     }
 }
 

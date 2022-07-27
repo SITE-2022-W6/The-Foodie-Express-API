@@ -30,4 +30,13 @@ router.put('/:id/:column', async (req, res, next) => {
     }
 })
 
+router.delete('/:id', async (req, res, next) => {
+    try {
+        await Review.deleteReview(req.params.id)
+        return res.status(200).json( {"Deletion Status":"Successful"} )
+    } catch(err) {
+        next(err)
+    }
+})
+
 module.exports = router
