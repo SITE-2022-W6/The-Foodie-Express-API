@@ -37,13 +37,10 @@ class Review {
         
         return result.rows[0]
     }
-    /* HELPER FUNCTIONS */
 
     static async getReviewById(id) {
         // Check if id exists, if not throw an error
-        if(!id) {
-            throw new BadRequestError(`Missing id in req body`)
-        }
+        this.checkForId(id)
 
         // Query the db and store results
         const result = await db.query(
@@ -55,14 +52,12 @@ class Review {
 
     static async updateReview(id, column, content) {
         this.checkForId(id)
-        await db.query(
-            `UPDATE reviews SET ${column}=${content.content} WHERE id='${id}'`
-        )
+        await db.query(`UPDATE reviews SET ${column}=${content.content} WHERE id='${id}'`)
     }
 
     static async deleteReview(id) {
         this.checkForId(id)
-        await db.query( `DELETE FROM reviews WHERE reviews.id='${id}'`)
+        await db.query(`DELETE FROM reviews WHERE reviews.id='${id}'`)
     }
 
     /* ---- Helpers ---- */
