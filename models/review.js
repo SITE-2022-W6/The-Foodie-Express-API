@@ -55,9 +55,8 @@ class Review {
 
     static async updateReview(id, column, content) {
         this.checkForId(id)
-
         await db.query(
-            `UPDATE reviews SET ${column}=${content.column} WHERE id='${id}'`
+            `UPDATE reviews SET ${column}=${content.content} WHERE id='${id}'`
         )
     }
 
