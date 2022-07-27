@@ -8,7 +8,13 @@ const OM_API_KEY = process.env.OPENMENU_API_KEY
 class Restaurant {
     //Checks database for restaurant, if it can't find it, makes call to api
     static async getMenuByRestaurantName(restaurantName, city='', postal_code=0) {
+<<<<<<< HEAD
         //console.log("getMenuByRestaurantName: ", restaurantName, city, postal_code)
+=======
+
+        //console.log("getMenuByRestaurantName: ", restaurantName, city, postal_code)
+
+>>>>>>> 115592e9f1438f33c9a1acf8423681e162e37afa
         const result = await db.query(
             `SELECT restaurants.id,restaurants.name,menus.id,items.group_name,items.id,items.name, items.description, items.price, items.calories 
             FROM restaurants  
@@ -51,7 +57,7 @@ class Restaurant {
         //console.log("location:", location, city, postal_code, loc, restaurantName, OM_API_KEY)
         const result = await axios.get(`https://openmenu.com/api/v2/location.php?key=${OM_API_KEY}&country=us&${location}=${loc}&s=${restaurantName}`)
             .catch((err) => {
-                console.log(err)
+                throw err
             })
         //console.log(result.data.response.result.restaurants[0].id)
         return result.data.response.result.restaurants[0].id
@@ -62,7 +68,7 @@ class Restaurant {
         //console.log("in apiRestaurantInfo: id:", id)
         const result = await axios.get(`https://openmenu.com/api/v2/restaurant.php?key=${OM_API_KEY}&id=${id}`)
             .catch((err) => {
-                console.log(err)
+                throw err
             })
         //console.log("Restaurant info:", result.data.response.result)
         return result.data.response.result
