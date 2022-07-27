@@ -51,7 +51,7 @@ class Restaurant {
         //console.log("location:", location, city, postal_code, loc, restaurantName, OM_API_KEY)
         const result = await axios.get(`https://openmenu.com/api/v2/location.php?key=${OM_API_KEY}&country=us&${location}=${loc}&s=${restaurantName}`)
             .catch((err) => {
-                console.log(err)
+                throw err
             })
         //console.log(result.data.response.result.restaurants[0].id)
         return result.data.response.result.restaurants[0].id
@@ -62,7 +62,7 @@ class Restaurant {
         //console.log("in apiRestaurantInfo: id:", id)
         const result = await axios.get(`https://openmenu.com/api/v2/restaurant.php?key=${OM_API_KEY}&id=${id}`)
             .catch((err) => {
-                console.log(err)
+                throw err
             })
         //console.log("Restaurant info:", result.data.response.result)
         return result.data.response.result
