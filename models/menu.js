@@ -1,5 +1,4 @@
 const db = require('../db')
-
 const { NotFoundError } = require('../utils/errors')
 
 class Menu {
@@ -60,8 +59,8 @@ class Menu {
         return Promise.all(returnGroup)
     }
 
-    static async getMenuBy(restaurantId) {
-        //Get menu from database
+    //Get Menu from id
+    static async getMenu(restaurantId) {
         const result = await db.query(`
         SELECT menu
         FROM menus
