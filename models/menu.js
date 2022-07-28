@@ -67,7 +67,7 @@ class Menu {
         `,
             [restaurantId])
 
-        console.log("result.rows.length: ", result.rows.length)
+        // console.log("result.rows.length: ", result.rows.length)
         return result.rows[0]
     }
     
