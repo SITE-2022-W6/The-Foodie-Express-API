@@ -70,6 +70,25 @@ class Menu {
         console.log("result.rows.length: ", result.rows.length)
         return result.rows[0]
     }
+    
+    //Get details about a menu item
+    static async getMenuItem(restaurantName, itemName) {
+        const result = await db.query(`
+        SELECT 
+            items.group_name,
+            items.name,
+            items.description,
+            items.price,
+            items.calories
+        FROM
+            restaurants
+            JOIN menus ON restaurants.id=menus.restaurant_id
+            JOIN items ON menus.id=items.menu_id
+        WHERE LOWER(restaurants.name) LIKE '%${restaurantName.replace(/[^a-zA-Z0-9 ]/g, '')}%'
+              AND items.name = $1
+        `, [itemName])
+        return result.rows[0]
+    }
 }
 
 module.exports = Menu
