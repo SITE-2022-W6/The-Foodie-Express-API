@@ -160,8 +160,8 @@ class Restaurant {
         }
     }
 
-    static async getRestaurantsByLocation(state, city) {
-        const results = await axios.get(`https://openmenu.com/api/v2/location.php?key=${OM_API_KEY}&country=us&state=${state}&city=${city}`)
+    static async getRestaurantsByLocation(state, city, offset) {
+        const results = await axios.get(`https://openmenu.com/api/v2/location.php?key=${OM_API_KEY}&country=us&state=${state}&city=${city}&offset=${offset}`)
         return results.data.response.result.restaurants
     }
 }
