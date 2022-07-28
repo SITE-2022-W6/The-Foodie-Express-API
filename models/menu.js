@@ -72,7 +72,7 @@ class Menu {
     }
     
     //Get details about a menu item
-    static async getMenuItem(restaurantName, itemName) {
+    static async getMenuItem(restaurantId, itemName) {
         const result = await db.query(`
         SELECT 
             items.group_name,
@@ -84,9 +84,9 @@ class Menu {
             restaurants
             JOIN menus ON restaurants.id=menus.restaurant_id
             JOIN items ON menus.id=items.menu_id
-        WHERE LOWER(restaurants.name) LIKE '%${restaurantName.replace(/[^a-zA-Z0-9 ]/g, '')}%'
-              AND items.name = $1
-        `, [itemName])
+        WHERE restaurants.OpenMenu_id = $1
+              AND items.name = $2
+        `, [restaurantId, itemName])
         return result.rows[0]
     }
 }

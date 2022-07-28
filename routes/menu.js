@@ -20,9 +20,9 @@ router.get('/:restaurantId', async (req, res, next) => {
 })
 
 //Get information about a specific menu item
-router.get('/:restaurantName/:itemName', async (req,res,next) => {
+router.get('/:restaurantId/:itemName', async (req,res,next) => {
     try {
-        const item = await Menu.getMenuItem(req.params.restaurantName, req.params.itemName)
+        const item = await Menu.getMenuItem(req.params.restaurantId, req.params.itemName)
         return res.status(200).json({ item })
     }
     catch (err) {
