@@ -21,9 +21,9 @@ router.get('/:id', async (req, res, next) => {
     }
 })
 
-router.get('/user/:user_id', async (req, res, next) => {
+router.get('/user/:userId', async (req, res, next) => {
     try {
-        const reviews = await Review.getReviewsByUserId(req.params.user_id)
+        const reviews = await Review.getReviewsByUserId(req.params.userId)
         return res.status(200).json({ reviews })
     }
     catch(err)

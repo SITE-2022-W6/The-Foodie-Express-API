@@ -50,6 +50,17 @@ class Review {
         return result.rows[0]
     }
 
+    static async getReviewsByUserId(userId) {
+        const results = await db.query(
+            `
+            SELECT * FROM reviews WHERE user_id = $1
+            `
+            ,[userId]
+        )
+
+        return results.rows
+    }
+
     static async updateReview(id, column, content) {
         this.checkForId(id)
         await db.query(`UPDATE reviews SET ${column}=${content.content} WHERE id='${id}'`)
