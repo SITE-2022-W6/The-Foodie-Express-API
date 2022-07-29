@@ -104,11 +104,12 @@ class Restaurant {
         [OpenMenu_id, name, brief_description, phone, fax, address_1, address_2, cuisine_type_primary, operating_days, operating_days_printable, restaurant_verbose])
 
         const restaurant_info = data.restaurant_info
+        const environment_info = data.environment_info
         const menuList = await Menu.insertMenu(data.menus, dbResponse.rows[0].id)
 
         //this.addMenusToDb(data.menus, dbResponse.rows[0].id)
         //console.log("end of addRestauranttoDB ------- ")
-        return returntype === "restaurant" ? dbResponse.rows[0] : {restaurant_info, menu: menuList}
+        return returntype === "restaurant" ? dbResponse.rows[0] : {restaurant_info, environment_info, menu: menuList}
     }
 
     static async getMenusByRestaurantId(id) {
@@ -143,13 +144,14 @@ class Restaurant {
                 WHERE restaurants.OpenMenu_id = $1`,
                 [OMId]
             )
-            console.log("restaurant_info: ",restaurant_verbose.rows[0].restaurant_verbose.restaurant_info)
+            // console.log("restaurant_info: ",restaurant_verbose.rows[0].restaurant_verbose.restaurant_info)
             const restaurant_info = restaurant_verbose.rows[0].restaurant_verbose.restaurant_info
+            const environment_info = restaurant_verbose.rows[0].restaurant_verbose.environment_info
             const menu = result.rows.map((menu_verbose) =>
                 {
                     return menu_verbose.menu_verbose
                 })
-            return {restaurant_info, menu}
+            return {restaurant_info, environment_info, menu}
         }
         else
         {
