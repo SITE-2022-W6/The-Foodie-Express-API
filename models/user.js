@@ -84,7 +84,6 @@ class User {
   }
 
   static async setUserPreferances(userId, cuisine, rating) {
-    cuisine
       const result = await db.query(`INSERT INTO preferencs (user_id, cuisine, rating)
         VALUES ($1, $2, $3) 
         RETURNING *`, 

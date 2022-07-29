@@ -60,3 +60,12 @@ CREATE TABLE reviews (
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   FOREIGN KEY (restaurant_id) REFERENCES restaurants(id) ON DELETE CASCADE
 );
+
+CREATE TABLE preferences (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL,
+  cuisine TEXT NOT NULL,
+  rating INTEGER NOT NULL, 
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_DATE,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+)
