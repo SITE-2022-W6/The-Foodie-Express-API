@@ -61,13 +61,13 @@ class User {
     VALUES ($1, $2, $3, $4, $5)
     RETURNING *
     `,
-      [
-        credentials.firstName,
-        credentials.lastName,
-        lowerCaseEmail,
-        credentials.phoneNumber,
-        hashedPassword,
-      ]
+      [ 
+        credentials.firstName, 
+        credentials.lastName, 
+        lowerCaseEmail, 
+        credentials.phoneNumber, 
+        hashedPassword, 
+      ] 
     );
     const user = result.rows[0];
     return user;
@@ -81,6 +81,20 @@ class User {
     const result = await db.query(query, [email.toLowerCase()]);
     const user = result.rows[0];
     return user;
+  }
+
+  static async setUserPreferances(userId, cuisine, rating) {
+    cuisine
+      const result = await db.query(`INSERT INTO preferencs (user_id, cuisine, rating)
+        VALUES ($1, $2, $3) 
+        RETURNING *`, 
+      [userId, cuisine, rating])
+      
+      return result.rows
+  } 
+
+  static async cuisineInDb() {
+
   }
 }
 
