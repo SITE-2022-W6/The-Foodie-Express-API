@@ -30,4 +30,16 @@ router.get('/:restaurantId/:itemName', async (req,res,next) => {
     }
 })
 
+//Get average rating of a menu item
+router.get('/rating/detail/average', async (req, res, next) => {
+    try{
+        const average = await Menu.getAverageRating(req.query.restaurant_id, req.query.item_name)
+        return res.status(200).json({ average })
+
+    }
+    catch(err) {
+        next(err)
+    }
+})
+
 module.exports = router;

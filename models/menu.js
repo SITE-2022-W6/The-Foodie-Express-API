@@ -89,6 +89,22 @@ class Menu {
         `, [restaurantId, itemName])
         return result.rows[0]
     }
+
+    //Get average rating of a menu item
+    static async getAverageRating(restuarantId, itemName)
+    {
+        const result = await db.query(`
+        SELECT
+            ROUND(AVG(rating), 2)
+        FROM
+            reviews
+        WHERE 
+            restaurant_id = $1
+            AND menu_item_name = $2
+        `, [restuarantId, itemName])
+
+        return result.rows[0]
+    }
 }
 
 module.exports = Menu
