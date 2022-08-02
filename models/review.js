@@ -59,7 +59,14 @@ class Review {
         this.checkForId(id)
         await db.query(`DELETE FROM reviews WHERE reviews.id='${id}'`)
     }
+    static async getReviews(userId) {
+        const result = await db.query(`
+            SELECT * FROM reviews
+            WHERE user_id=${userId}`
+        )
 
+        return result.rows
+    }
     /* ---- Helpers ---- */
     static async checkForId(id) {
         if(!id) { throw new BadRequestError('No ID') }

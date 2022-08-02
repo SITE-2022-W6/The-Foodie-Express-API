@@ -39,4 +39,13 @@ router.delete('/:id', async (req, res, next) => {
     }
 })
 
+router.get('/all/:id', async (req, res, next) => {
+    try {
+        const all = await Review.getReviews(req.params.id)
+        return res.status(200).json({ all })
+    } catch(e) {
+        next(e)
+    }
+})
+
 module.exports = router
