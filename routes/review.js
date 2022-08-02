@@ -21,17 +21,6 @@ router.get('/:id', async (req, res, next) => {
     }
 })
 
-router.get('/user/:userId', async (req, res, next) => {
-    try {
-        const reviews = await Review.getReviewsByUserId(req.params.userId)
-        return res.status(200).json({ reviews })
-    }
-    catch(err)
-    {
-        next(err)
-    }
-})
-
 router.put('/:id/:column', async (req, res, next) => {
     try {
         await Review.updateReview(req.params.id, req.params.column, req.body)
@@ -47,6 +36,15 @@ router.delete('/:id', async (req, res, next) => {
         return res.status(200).json( {"Deletion Status":"Successful"} )
     } catch(err) {
         next(err)
+    }
+})
+
+router.get('/all/:id', async (req, res, next) => {
+    try {
+        const all = await Review.getReviews(req.params.id)
+        return res.status(200).json({ all })
+    } catch(e) {
+        next(e)
     }
 })
 
