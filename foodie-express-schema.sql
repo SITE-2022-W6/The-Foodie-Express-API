@@ -54,9 +54,19 @@ CREATE TABLE reviews (
   menu_item_name TEXT NOT NULL,
   rating INTEGER NOT NULL,
   content TEXT,
-  --Optional image urls maybe
+  --Image URLs are a strech feature
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_DATE,
-  --For testing and demo purposes the foreign key associations have been commented out
+  --For testing and demo purposes, comment out FOREIGN KEYs
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   FOREIGN KEY (restaurant_id) REFERENCES restaurants(id) ON DELETE CASCADE
 );
+
+CREATE TABLE preferences (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL,
+  cuisine TEXT NOT NULL,
+  rating INTEGER NOT NULL, 
+  quantity INTEGER DEFAULT 1,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_DATE
+  --FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+)

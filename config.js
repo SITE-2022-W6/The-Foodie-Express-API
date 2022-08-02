@@ -17,7 +17,7 @@ function getDatabaseUri() {
 console.log('App Config:'.red)
 console.log('PORT:'.blue, PORT)
 console.log('KEY:'.blue, SECRET_KEY)
-console.log('Database URI:'.blue, getDatabaseUri())
+console.log('Database URI:'.blue, "")
 console.log('---')
 
 module.exports = {

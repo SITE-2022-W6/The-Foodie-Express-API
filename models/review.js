@@ -63,14 +63,21 @@ class Review {
 
     static async updateReview(id, column, content) {
         this.checkForId(id)
-        await db.query(`UPDATE reviews SET ${column}=${content.content} WHERE id='${id}'`)
+        await db.query(`UPDATE reviews SET ${column}='${content.content}' WHERE id='${id}'`)
     }
 
     static async deleteReview(id) {
         this.checkForId(id)
         await db.query(`DELETE FROM reviews WHERE reviews.id='${id}'`)
     }
+    static async getReviews(userId) {
+        const result = await db.query(`
+            SELECT * FROM reviews
+            WHERE user_id=${userId}`
+        )
 
+        return result.rows
+    }
     /* ---- Helpers ---- */
     static async checkForId(id) {
         if(!id) { throw new BadRequestError('No ID') }
