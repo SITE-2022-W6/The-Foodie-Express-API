@@ -115,9 +115,9 @@ class User {
  static async updateUserPreference(userId, cuisine, rating) {
   const result = await db.query(`
     UPDATE preferences 
-    SET rating=rating+${rating}, quantity=quantity+1 
-    WHERE user_id='${userId}' AND cuisine='${cuisine}' 
-    RETURNING *`)
+    SET rating=rating+$1, quantity=quantity+1 
+    WHERE user_id=$2 AND cuisine=$3 
+    RETURNING *`, [rating, userId, cuisine])
 
   return result.rows
  }
@@ -125,7 +125,7 @@ class User {
  // Returns a users categories in average-rating order, ascending.
  // Called on after a user logs in and goes to their dashboard.
  static async recommend(userId) {
-  const result = await db.query(`SELECT * FROM preferences WHERE user_id=${userId}`)
+  const result = await db.query(`SELECT * FROM preferences WHERE user_id=$1`, [userId])
   let highestRatedCuisine = {};
   let avgRatings = result.rows.map((row) => {
     if(!highestRatedCuisine?.rating)
@@ -137,7 +137,7 @@ class User {
   // The sort function is used to sort alphabetic characters, but it will apply the function
   // and now sort ints.
   // Commented out because it works for arrays, not objs.
-  // Should time allow, I'll reimlement.
+  // Should time allow, I'll reimplement.
   //avgRatings.sort(
   //  function(a, b){
   //    return a - b

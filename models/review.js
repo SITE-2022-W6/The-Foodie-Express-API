@@ -44,36 +44,25 @@ class Review {
 
         // Query the db and store results
         const result = await db.query(
-            `SELECT * FROM reviews WHERE id=${id}`
+            `SELECT * FROM reviews WHERE id=$1`, [id]
         )
         
         return result.rows[0]
     }
 
-    static async getReviewsByUserId(userId) {
-        const results = await db.query(
-            `
-            SELECT * FROM reviews WHERE user_id = $1
-            `
-            ,[userId]
-        )
-
-        return results.rows
-    }
-
     static async updateReview(id, column, content) {
         this.checkForId(id)
-        await db.query(`UPDATE reviews SET ${column}='${content.content}' WHERE id='${id}'`)
+        await db.query(`UPDATE reviews SET $1=$2 WHERE id=$3`, [column, content.content, id])
     }
 
     static async deleteReview(id) {
         this.checkForId(id)
-        await db.query(`DELETE FROM reviews WHERE reviews.id='${id}'`)
+        await db.query(`DELETE FROM reviews WHERE reviews.id=$1`, [id])
     }
     static async getReviews(userId) {
         const result = await db.query(`
             SELECT * FROM reviews
-            WHERE user_id=${userId}`
+            WHERE user_id=$1`, [userId]
         )
 
         return result.rows
