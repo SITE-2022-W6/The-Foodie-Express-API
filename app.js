@@ -8,7 +8,7 @@ const authRoutes = require('./routes/auth')
 const menuRoutes = require('./routes/menu')
 const restaruantRoutes = require('./routes/restaurant')
 const reviewRoutes = require('./routes/review')
-
+const testRoutes = require('./routes/testRoutes')
 const security = require('./middleware/security')
 
 const app = express()
@@ -23,7 +23,7 @@ app.use('/auth', authRoutes)
 app.use('/menu', menuRoutes)
 app.use('/restaurant', restaruantRoutes)
 app.use('/review', reviewRoutes)
-
+app.use('/test', testRoutes)
 app.get('/', async (req, res) => {
   res.status(200).json({ ping: 'pong' })
 })
