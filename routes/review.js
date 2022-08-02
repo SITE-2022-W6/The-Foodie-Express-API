@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-const Review = require("../models/review")
+const Review = require("../models/review");
+const { route } = require('./restaurant');
 
 router.post('/create-review', async (req, res, next) => {
     try {
@@ -45,6 +46,16 @@ router.get('/all/:id', async (req, res, next) => {
         return res.status(200).json({ all })
     } catch(e) {
         next(e)
+    }
+})
+
+router.get('/all/review/item', async (req, res, next) => {
+    try{
+        const reviews = await Review.getReviewsForItem(req.query.restaurant_id, req.query.item_name)
+        return res.status(200).json({ reviews })
+    } catch (err)
+    {
+        next(err)
     }
 })
 
