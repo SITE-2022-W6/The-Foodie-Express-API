@@ -26,8 +26,10 @@ router.get('/search/:id', async (req, res, next) => {
 //Get list of restaurants by city and state
 router.get('/location/:state/:city/:offset', async (req,res,next) => {
     try {
-        const restaurants = await Restaurant.getRestaurantsByLocation(req.params.state, req.params.city, req.params.offset)
-        return res.status(200).json({restaurants})
+        const results = await Restaurant.getRestaurantsByLocation(req.params.state, req.params.city, req.params.offset)
+        const restaurants = results.restaurants
+        const status = results.status
+        return res.status(status).json({restaurants})
     }catch (err) {
             next(err)
     }
