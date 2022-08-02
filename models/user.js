@@ -115,8 +115,8 @@ class User {
  static async updateUserPreference(userId, cuisine, rating) {
   const result = await db.query(`
     UPDATE preferences 
-    SET rating=rating+${rating}, quantity=quantiy+1 
-    WHERE userId='${userId}' AND cuisine='${cuisine}' 
+    SET rating=rating+${rating}, quantity=quantity+1 
+    WHERE user_id='${userId}' AND cuisine='${cuisine}' 
     RETURNING *`)
 
   return result.rows
@@ -126,18 +126,26 @@ class User {
  // Called on after a user logs in and goes to their dashboard.
  static async recommend(userId) {
   const result = await db.query(`SELECT * FROM preferences WHERE user_id=${userId}`)
-
+  let highestRatedCuisine = {};
   let avgRatings = result.rows.map((row) => {
-    return row.rating / row.quantity
+    if(!highestRatedCuisine?.rating)
+     {highestRatedCuisine['cuisine']=row.cuisine;highestRatedCuisine['rating']=row.rating / row.quantity}
+    else if
+     (highestRatedCuisine.rating <row.rating / row.quantity) {highestRatedCuisine['cuisine']=row.cuisine; highestRatedCuisine['rating']=row.rating / row.quantity}
+    return {[row.cuisine]: row.rating / row.quantity}
   })
   // The sort function is used to sort alphabetic characters, but it will apply the function
   // and now sort ints.
-  avgRatings.sort(
-    function(a, b){
-      return a - b
-  })
+  // Commented out because it works for arrays, not objs.
+  // Should time allow, I'll reimlement.
+  //avgRatings.sort(
+  //  function(a, b){
+  //    return a - b
+  //})
 
-  return avgRatings
+  
+
+  return {...avgRatings, highestRatedCuisine}
  }
 
 
