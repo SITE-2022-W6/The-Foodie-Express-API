@@ -83,18 +83,83 @@ class User {
     return user;
   }
 
-  static async setUserPreferances(userId, cuisine, rating) {
-      const result = await db.query(`INSERT INTO preferencs (user_id, cuisine, rating)
-        VALUES ($1, $2, $3) 
-        RETURNING *`, 
-      [userId, cuisine, rating])
-      
-      return result.rows
-  } 
+  /**CRAZY experimental SQL query attempt
+   * Commented out because it's too complicated.
+   * 
+   * Better ways of setting prefernces exist.
+  */
+  // Given a user, returns cuisines with their respective number of entries and summed ratings.
+  /*static async reviewedCuisineData(userId) {
+    const result = await db.query(`
+      SELECT restaurants.cuisine_type_primary AS cuisine, 
+        COUNT(reviews.menu_item_name) AS quantity, 
+        SUM(reviews.rating) AS rating_total
+      FROM reviews 
+        LEFT JOIN restaurants 
+        ON reviews.restaurant_id=restaurants.id
+      WHERE reviews.id='${userId}'
+      GROUP BY restaurants.cuisine_type_primary`)
 
-  static async cuisineInDb() {
+    return result.rows
+  }*/
+// Add a new categorey to preferences
+  static async newUserPreference(userId, cuisine, rating) {
+    const result = await db.query(`
+      INSERT INTO preferences (user_id, cuisine, rating)
+      VALUES ($1, $2, $3) 
+      RETURNING *`, [userId, cuisine, rating])
+    
+    return result.rows
+ } 
+// If cuisine already in table, just update it
+ static async updateUserPreference(userId, cuisine, rating) {
+  const result = await db.query(`
+    UPDATE preferences 
+    SET rating=rating+${rating}, quantity=quantiy+1 
+    WHERE userId='${userId}' AND cuisine='${cuisine}' 
+    RETURNING *`)
 
+  return result.rows
+ }
+
+ // Returns a users categories in average-rating order, ascending.
+ // Called on after a user logs in and goes to their dashboard.
+ static async recommend(userId) {
+  const result = await db.query(`SELECT * FROM preferences WHERE user_id=${userId}`)
+
+  let avgRatings = result.rows.map((row) => {
+    return row.rating / row.quantity
+  })
+  // The sort function is used to sort alphabetic characters, but it will apply the function
+  // and now sort ints.
+  avgRatings.sort(
+    function(a, b){
+      return a - b
+  })
+
+  return avgRatings
+ }
+
+
+// Update/add preferences for a user.
+// Called on after a review is submitted.
+// Mostly just a QoL function for dealing with updating vs creating an entry in table preferences.
+  static async addPreference(userId, cuisine, rating) {
+    const result = await db.query(`
+      SELECT * FROM preferences
+      WHERE user_id=${userId} AND cuisine='${cuisine}'`)
+    if(result.rows.length>0) {
+      this.updateUserPreference(userId, cuisine, rating)
+    } else {
+      this.newUserPreference(userId, cuisine, rating)
+    }
+  }
+
+  static async getRecommendations(cuisine) {
+    // Call the api with a cuisine as the search param
+    // Return list of restaurants 
+    // Quite frankly this portion might not be part of my job
+    // Seems not like a backend thing to do
   }
 }
-
 module.exports = User;
