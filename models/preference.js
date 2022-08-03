@@ -1,7 +1,7 @@
 const db = require("../db")
 
 class Preference {
-    /* ----- Set ----- */
+    /* ----- Create ----- */
 
     // Given: userId, cuisine, and rating
     // Insert a NEW entry in table preferences.
