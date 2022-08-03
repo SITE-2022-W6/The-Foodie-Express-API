@@ -24,9 +24,9 @@ router.get('/search/:id', async (req, res, next) => {
 
 
 //Get list of restaurants by city and state
-router.get('/location/:state/:city/:offset', async (req,res,next) => {
+router.get('/location', async (req,res,next) => {
     try {
-        const results = await Restaurant.getRestaurantsByLocation(req.params.state, req.params.city, req.params.offset)
+        const results = await Restaurant.getRestaurantsByLocation(req.query.state, req.query.city, req.query.offset)
         const restaurants = results.restaurants
         const status = results.status
         return res.status(status).json({restaurants})
@@ -36,7 +36,7 @@ router.get('/location/:state/:city/:offset', async (req,res,next) => {
 })
 
 //Search for restaurant menu
-router.get('/search', async (req, res, next) => {
+router.get('/menu/search', async (req, res, next) => {
     try {
         // console.log(req.query.restaurant_name, req.query.postal_code, req.query.city)
         const menu = await Restaurant.getMenuByRestaurantName(req.query.restaurant_name, req.query.city, req.query.postal_code)
@@ -48,9 +48,9 @@ router.get('/search', async (req, res, next) => {
 })
 
 //Search for menu by OpenMenuId
-router.get('/search/OM/:OMId', async (req, res, next) => {
+router.get('/search', async (req, res, next) => {
     try {
-        const menu = await Restaurant.getMenuByOpenMenuId(req.params.OMId)
+        const menu = await Restaurant.getMenuByOpenMenuId(req.query.OMId)
         return res.status(200).json({menu})
     } catch(err) {
 

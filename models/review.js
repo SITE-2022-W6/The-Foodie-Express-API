@@ -67,6 +67,21 @@ class Review {
 
         return result.rows
     }
+
+    static async getReviewsForItem(restaurantId, itemName)
+    {
+        const results = await db.query(`
+            SELECT
+                *
+            FROM
+                reviews
+            WHERE
+                restaurant_id = $1
+                AND menu_item_name = $2
+        `, [restaurantId, itemName])
+
+        return results.rows
+    }
     /* ---- Helpers ---- */
     static async checkForId(id) {
         if(!id) { throw new BadRequestError('No ID') }

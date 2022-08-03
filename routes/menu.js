@@ -6,26 +6,25 @@ router.get('/', async (req, res) => {
     res.status(200).json({ ping: 'menu' });
 })
 
-router.get('/:restaurantId', async (req, res, next) => {
+//Get information about a specific menu item
+router.get('/item', async (req,res,next) => {
     try {
-        //Pass in the restaurant id that you want the menu for
-        //menu will hold the menu for that restaurant
-        const menu = await Menu.getMenu(req.params.restaurantId)
-        // console.log(menu)
-        return res.status(200).json({ menu })
+        const item = await Menu.getMenuItem(req.query.restaurantId, req.query.itemName)
+        return res.status(200).json({ item })
     }
     catch (err) {
         next(err)
     }
 })
 
-//Get information about a specific menu item
-router.get('/:restaurantId/:itemName', async (req,res,next) => {
-    try {
-        const item = await Menu.getMenuItem(req.params.restaurantId, req.params.itemName)
-        return res.status(200).json({ item })
+//Get average rating of a menu item
+router.get('/rating', async (req, res, next) => {
+    try{
+        const average = await Menu.getAverageRating(req.query.restaurantId, req.query.itemName)
+        return res.status(200).json({ average })
+
     }
-    catch (err) {
+    catch(err) {
         next(err)
     }
 })
