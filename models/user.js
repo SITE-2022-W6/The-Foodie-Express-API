@@ -169,5 +169,7 @@ class User {
     // Quite frankly this portion might not be part of my job
     // Seems not like a backend thing to do
   }
+
+  
 }
 module.exports = User;

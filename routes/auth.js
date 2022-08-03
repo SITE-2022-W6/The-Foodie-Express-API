@@ -23,4 +23,14 @@ router.post('/register', async (req, res, next) => {
   }
 });
 
+router.put('/update', async (req, res, next) => {
+  try {
+    await User.update()
+  }
+  catch (err)
+  {
+    next(err)
+  }
+})
+
 module.exports = router;
