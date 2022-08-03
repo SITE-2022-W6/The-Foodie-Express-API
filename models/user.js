@@ -87,7 +87,7 @@ class User {
     if(!userId) {
       throw new BadRequestError('No Id provided')
     }
-    const query = 'SELECT * FROM users WHERE id = $1';
+    const query = 'SELECT first_name, last_name, email, phone_number FROM users WHERE id = $1';
     const result = await db.query(query, [userId]);
     const user = result.rows[0];
     return user;

@@ -25,7 +25,7 @@ router.post('/register', async (req, res, next) => {
 
 router.get('/id', async (req, res, next) => {
   try {
-    const user = await User.getUserByUserId(req.body);
+    const user = await User.getUserByUserId(req.query.userId);
     return res.status(200).json({ user });
   } catch (err) {
     next(err);
