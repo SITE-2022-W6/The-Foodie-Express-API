@@ -2,6 +2,7 @@ const db = require('../db')
 const { NotFoundError } = require('../utils/errors')
 
 class Menu {
+    //Adds menu to db
     static async insertMenu(menus, restaurant_id) {
         //Returns nested array of Promises
         const menu = await menus.map(async (menu) => { 
@@ -29,6 +30,7 @@ class Menu {
          return menuArr
     }
     
+    //Adds menu item to db
     static async addItemsToDb(groups, menu_id) {
         const menuGroups = await groups.map(async (group) => {
 
@@ -56,19 +58,6 @@ class Menu {
             return groupObj
         })
         return Promise.all(menuGroups)
-    }
-
-    //Get Menu from id
-    static async getMenu(restaurantId) {
-        const result = await db.query(`
-        SELECT menu
-        FROM menus
-        WHERE restaurant_id = $1;       
-        `,
-            [restaurantId])
-
-        // console.log("result.rows.length: ", result.rows.length)
-        return result.rows[0]
     }
     
     //Get details about a menu item
