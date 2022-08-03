@@ -6,6 +6,7 @@ const { route } = require('./restaurant');
 
 router.post('/create-review', async (req, res, next) => {
     try {
+        // console.log(req.body)
         const review = await Review.createReview(req.body)
         return res.status(201).json({ review })
     } catch(err) {
