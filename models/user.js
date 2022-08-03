@@ -73,6 +73,10 @@ class User {
     return user;
   }
 
+  static async update() {
+    
+  }
+
   static async fetchUserByEmail(email) {
     if (!email) {
       throw new BadRequestError('No email provided');
