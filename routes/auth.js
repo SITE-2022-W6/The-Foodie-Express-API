@@ -25,7 +25,18 @@ router.post('/register', async (req, res, next) => {
 
 router.put('/update', async (req, res, next) => {
   try {
-    await User.update()
+    await User.update(req.query.id, req.query.column, req.body)
+  }
+  catch (err)
+  {
+    next(err)
+  }
+})
+
+router.get('/user', async (req, res, next) => {
+  try {
+    const user = await User.fetchUserByEmail(req.query.email)
+    return user
   }
   catch (err)
   {

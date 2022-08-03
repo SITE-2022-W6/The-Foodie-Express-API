@@ -73,8 +73,8 @@ class User {
     return user;
   }
 
-  static async update() {
-    
+  static async update(id, column, body) {
+    await db.query(`UPDATE users SET $1=$2 WHERE id=$3`, [column, body[column], id])
   }
 
   static async fetchUserByEmail(email) {
@@ -106,7 +106,7 @@ class User {
 
     return result.rows
   }*/
-// Add a new categorey to preferences
+// Add a new category to preferences
   static async newUserPreference(userId, cuisine, rating) {
     const result = await db.query(`
       INSERT INTO preferences (user_id, cuisine, rating)
