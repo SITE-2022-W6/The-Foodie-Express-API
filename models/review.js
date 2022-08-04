@@ -1,88 +1,116 @@
 const db = require("../db")
 
 const { BadRequestError } = require("../utils/errors")
+const Preference = require("./preference")
 
 class Review {
+    /* ----- Create Review ----- */
+
+    // Create a review, given an object with specific keys and values.
     static async createReview(content) {
-        // Check for required fields, if a field is missing throw an error
+        // Set fields our table, reviews, both requires and accepts...
         const requiredFields = ["user_id", "restaurant_id", "menu_item_name", "rating"]
+        const optionalFields = ["content"]
+
+        // Arrays for building our db query...
+        let columns = []
+        let values = []
+        let valueIndices = []
+        // Create a method for updating entryFields...
+        let addField = (col, val) => {
+            columns.push(col)
+            values.push(val)
+            valueIndices.push(`$${valueIndices.length+1}`)
+        }
+
+        // Populate our query-building ararys...
         requiredFields.forEach(field => {
             if (!content.hasOwnProperty(field)) {
                 throw new BadRequestError(`Missing ${field} in req body`)
+            } else {
+                addField(field, content[field])
             }
         })
-        // Tracks fields for building db query
-        let columns = {
-            "user_id" : content.user_id,
-            "restaurant_id" : content.restaurant_id,
-            "menu_item_name" : content.menu_item_name,
-            "rating" : content.rating
-        }
-        // Check for optional fields
-        const optionalFields = ["content"]
         optionalFields.forEach(field => {
             if(content.hasOwnProperty(field)) {
-                columns[field] = content[field]
+                addField(field, content[field])
             }
         })
-        // Auxiliary array for building db query
-        const valuesIndices = Object.keys(columns).map((e, ind) => (`$${ind+1}`))
-        // Query the db and store results
+
+        // Build and execute a query to  our db...
         const result = await db.query(
-            `INSERT INTO reviews (${ Object.keys(columns).toString() })
-             VALUES (${ valuesIndices.toString() })
-             RETURNING id, user_id, restaurant_id, menu_item_name, rating, content;`,
-            Object.values(columns)
+            `INSERT INTO reviews (${ columns.toString() })
+             VALUES (${ valueIndices.toString() })
+             RETURNING *`,
+            values
         )
         
+        Preference.setPreference(result.user_id)
+        // Return our db entry...
         return result.rows[0]
     }
-
-    static async getReviewById(id) {
-        // Check if id exists, if not throw an error
-        this.checkForId(id)
-
-        // Query the db and store results
-        const result = await db.query(
-            `SELECT * FROM reviews WHERE id=$1`, [id]
-        )
-        
-        return result.rows[0]
-    }
+    /* ----- Update ----- */
 
     static async updateReview(id, column, content) {
         this.checkForId(id)
-        await db.query(`UPDATE reviews SET $1=$2 WHERE id=$3`, [column, content.content, id])
-    }
-
-    static async deleteReview(id) {
-        this.checkForId(id)
-        await db.query(`DELETE FROM reviews WHERE reviews.id=$1`, [id])
-    }
-    static async getReviews(userId) {
+        
         const result = await db.query(`
-            SELECT * FROM reviews
-            WHERE user_id=$1`, [userId]
+            UPDATE reviews SET $1=$2 
+            WHERE id=$3
+            RETURNING *`, 
+            [column, content.content, id]
         )
 
         return result.rows
     }
 
+    /* ----- Retrieve ----- */
+    
+    // Given a review Id, return a review
+    static async getReviewById(id) {
+        this.checkForId(id)
+
+        const result = await db.query(`
+            SELECT * FROM reviews 
+            WHERE id=$1`, 
+            [id]
+        )
+        
+        return result.rows[0]
+    }
+
+    // Return any reviews associated with a given item name and restaurantId
     static async getReviewsForItem(restaurantId, itemName)
     {
         const results = await db.query(`
-            SELECT
-                *
-            FROM
-                reviews
-            WHERE
-                restaurant_id = $1
-                AND menu_item_name = $2
-        `, [restaurantId, itemName])
+            SELECT * FROM reviews
+            WHERE restaurant_id = $1 AND menu_item_name = $2`, 
+            [restaurantId, itemName])
 
         return results.rows
     }
-    /* ---- Helpers ---- */
+
+    // Return a user's reviews
+    static async getReviews(userId) {
+        const result = await db.query(`
+            SELECT * FROM reviews
+            WHERE user_id=$1`, 
+            [userId]
+        )
+
+        return result.rows
+    }
+
+    /* ----- Delete ----- */
+
+    // Given a review id, delete an id
+    static async deleteReview(id) {
+        this.checkForId(id)
+        await db.query(`DELETE FROM reviews WHERE reviews.id=$1`, [id])
+    }
+
+    /* ---- Helper ---- */
+    // If no id is passed, throw an error...
     static async checkForId(id) {
         if(!id) { throw new BadRequestError('No ID') }
     }

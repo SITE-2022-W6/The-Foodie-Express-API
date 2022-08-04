@@ -94,6 +94,16 @@ class User {
     return user;
   }
 
+  static async fetchUserByUserId(userId) {
+    if(!userId) {
+      throw new BadRequestError('No Id provided')
+    }
+    const query = 'SELECT first_name, last_name, email, phone_number FROM users WHERE id = $1';
+    const result = await db.query(query, [userId]);
+    const user = result.rows[0];
+    return user;
+  }
+
   /**CRAZY experimental SQL query attempt
    * Commented out because it's too complicated.
    * 
@@ -113,6 +123,7 @@ class User {
 
     return result.rows
   }*/
+
 // Add a new category to preferences
   static async newUserPreference(userId, cuisine, rating) {
     const result = await db.query(`
@@ -182,5 +193,6 @@ class User {
   }
 
   
+
 }
 module.exports = User;

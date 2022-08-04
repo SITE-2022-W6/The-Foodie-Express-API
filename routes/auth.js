@@ -23,6 +23,7 @@ router.post('/register', async (req, res, next) => {
   }
 });
 
+
 router.put('/update', async (req, res, next) => {
   try {
     await User.update(req.query.id, req.query.column, req.body)
@@ -44,5 +45,15 @@ router.get('/user', async (req, res, next) => {
     next(err)
   }
 })
+
+router.get('/id', async (req, res, next) => {
+  try {
+    const user = await User.fetchUserByUserId(req.query.userId);
+    return res.status(200).json({ user });
+  } catch (err) {
+    next(err);
+  }
+});
+
 
 module.exports = router;
