@@ -83,8 +83,16 @@ class Review {
     static async getReviewsForItem(restaurantId, itemName)
     {
         const results = await db.query(`
-            SELECT * FROM reviews
-            WHERE restaurant_id = $1 AND menu_item_name = $2`, 
+            SELECT 
+                reviews.content,
+                reviews.created_at,
+                reviews.rating,
+                users.first_name,5
+                users.last_name
+            FROM 
+                reviews
+            LEFT JOIN users ON reviews.user_id = users.id
+            WHERE reviews.restaurant_id = $1 AND reviews.menu_item_name = $2`, 
             [restaurantId, itemName])
 
         return results.rows
