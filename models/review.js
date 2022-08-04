@@ -87,7 +87,7 @@ class Review {
                 reviews.content,
                 reviews.created_at,
                 reviews.rating,
-                users.first_name,5
+                users.first_name,
                 users.last_name
             FROM 
                 reviews
