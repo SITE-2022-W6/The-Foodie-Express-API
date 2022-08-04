@@ -6,71 +6,11 @@ const Menu = require('./menu');
 const OM_API_KEY = process.env.OPENMENU_API_KEY
 
 class Restaurant {
-    //Checks database for restaurant, if it can't find it, makes call to api
-    static async getMenuByRestaurantName(restaurantName, city='', postal_code=0) {
-        //console.log("getMenuByRestaurantName: ", restaurantName, city, postal_code)
-        const result = await db.query(
-            `SELECT menus.menu_verbose 
-            FROM restaurants  
-                LEFT JOIN menus 
-                ON restaurants.id=menus.restaurant_id
-            WHERE LOWER(restaurants.name) LIKE '%${restaurantName.replace(/[^a-zA-Z0-9 ]/g, '')}%'`
-        )
-        //console.log("db results: ", result.rows)
-        if(result.rows.length>0) {
-            const menu = result.rows.map((menu_verbose) =>
-                {
-                    return menu_verbose.menu_verbose
-                })
-            return menu
-        } else {
-            //console.log("db has no such entry, resorting to api calls: ")
-            const apiRestaurantId = await this.apiSearchForRestaurantByName(restaurantName, city, postal_code)
-            if(!apiRestaurantId) { throw new BadRequestError("No restaurant id found") }
-            const apiRestaurant = await this.apiRestaurantInfo(apiRestaurantId)
-            const dbInsertResponse = await this.addRestaurantToDb(apiRestaurant, "menu")
-            
-            return dbInsertResponse
-        }
-    }
+    /* ----- Create ----- */
 
-    //Calls OpenMenu API to find restaurant and returns restaurant id
-    static async apiSearchForRestaurantByName(restaurantName, city, postal_code) {
-        //console.log("apiSearchForRest: ", restaurantName, city, postal_code)
-        let location = ''
-        // Check for city or postal_code, throw an error if none was passed
-        if(city=='' && postal_code==0) {
-            throw new BadRequestError('CITY OR POSTAL CODE MISSING')
-        }
-        // Determine which parameter to use for api call
-        if(city!='') {
-            location = 'city'
-        }
-        if(postal_code!=0) {
-            location = 'postal_code'
-        }
-        let loc = (location=='city')?city:postal_code
-        //console.log("location:", location, city, postal_code, loc, restaurantName, OM_API_KEY)
-        const result = await axios.get(`https://openmenu.com/api/v2/location.php?key=${OM_API_KEY}&country=us&${location}=${loc}&s=${restaurantName}`)
-            .catch((err) => {
-                throw err
-            })
-        //console.log(result.data.response.result.restaurants[0].id)
-        return result.data.response.result.restaurants[0].id
-    }
-
-    //Calls the API and returns details about a restaurant
-    static async apiRestaurantInfo(id) {
-        //console.log("in apiRestaurantInfo: id:", id)
-        const result = await axios.get(`https://openmenu.com/api/v2/restaurant.php?key=${OM_API_KEY}&id=${id}`)
-            .catch((err) => {
-                throw err
-            })
-        //console.log("Restaurant info:", result.data.response.result)
-        return result.data.response.result
-    }
-
-    //Return type is either the menu or restaurant details
+    // Given data and returnType, insert a restaurant into our db
+    // returntype is either "menu" or "restaurant"
+    // Return portions or all of the inserted data, depending on returntype
     static async addRestaurantToDb(data, returntype) {
         // Set restaurant values
         let OpenMenu_id = data.id
@@ -107,9 +47,86 @@ class Restaurant {
         const environment_info = data.environment_info
         const menuList = await Menu.insertMenu(data.menus, dbResponse.rows[0].id)
 
-        //this.addMenusToDb(data.menus, dbResponse.rows[0].id)
-        //console.log("end of addRestauranttoDB ------- ")
+        // Return certain data based on given returnType
         return returntype === "restaurant" ? dbResponse.rows[0] : {restaurant_info, environment_info, menu: menuList}
+    }
+    
+    /* ----- Retrieve ----- */
+
+    // Searches API for restaurants matching a restaurantName within a region
+    // Restaurant is presumably not in our db
+    // Returns one restaurant, the first match
+    static async apiSearchForRestaurantByName(restaurantName, city, postal_code) {
+        // Intialize a variable for building our get request...
+        // This variable serves to define HOW we'll be specifying the 'where' to look for a restaurant...
+        // For example, we might define regionParam to be 'city' and pass a value of 'London' ;)
+        let regionParam = ''
+
+        // Throw an error if no city or postal_code was passed...
+        if(city=='' && postal_code==0) {
+            throw new BadRequestError('CITY OR POSTAL CODE MISSING')
+        }
+
+        // Determine how we'll be focusing our search...
+        if(city!='') {
+            regionParam = 'city'
+        }
+        if(postal_code!=0) {
+            regionParam = 'postal_code'
+        }
+
+        // Determine the where we'll be focusing our search...
+        let regionVal = (regionParam=='city')?city:postal_code // This variable actually store the WHERE to search for a restaurant...
+
+        // Call the API...
+        const result = await axios.get(`https://openmenu.com/api/v2/location.php?key=${OM_API_KEY}&country=us&${regionParam}=${regionVal}&s=${restaurantName}`)
+            .catch((err) => {
+                throw err
+            })
+        
+        // Return an OpenMenu restaurant Id
+        return result.data.response.result.restaurants[0].id
+    }
+
+    // Given an OpenMenu restaurant id...
+    // Return details about a restaurant in the API
+    static async apiRestaurantInfo(OMid) {
+        // Call the API... 
+        const result = await axios.get(`https://openmenu.com/api/v2/restaurant.php?key=${OM_API_KEY}&id=${OMid}`)
+            .catch((err) => {
+                throw err
+            })
+
+        // Return restaurant data
+        return result.data.response.result
+    }
+    
+    // Checks database for restaurant, if it can't find it, makes call to api
+    static async getMenuByRestaurantName(restaurantName, city='', postal_code=0) {
+        //console.log("getMenuByRestaurantName: ", restaurantName, city, postal_code)
+        const result = await db.query(
+            `SELECT menus.menu_verbose 
+            FROM restaurants  
+                LEFT JOIN menus 
+                ON restaurants.id=menus.restaurant_id
+            WHERE LOWER(restaurants.name) LIKE '%${restaurantName.replace(/[^a-zA-Z0-9 ]/g, '')}%'`
+        )
+        // console.log("db results: ", result.rows)
+        if(result.rows.length>0) {
+            const menu = result.rows.map((menu_verbose) =>
+                {
+                    return menu_verbose.menu_verbose
+                })
+            return menu
+        } else {
+            //console.log("db has no such entry, resorting to api calls: ")
+            const apiRestaurantId = await this.apiSearchForRestaurantByName(restaurantName, city, postal_code)
+            if(!apiRestaurantId) { throw new BadRequestError("No restaurant id found") }
+            const apiRestaurant = await this.apiRestaurantInfo(apiRestaurantId)
+            const dbInsertResponse = await this.addRestaurantToDb(apiRestaurant, "menu")
+            
+            return dbInsertResponse
+        }
     }
 
     static async getMenusByRestaurantId(id) {

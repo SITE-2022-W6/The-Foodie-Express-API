@@ -45,7 +45,7 @@ class Review {
             values
         )
         
-        Preference.setPreference(result.user_id)
+        Preference.setPreference(result.user_id, result.menu_item_name, result.rating)
         // Return our db entry...
         return result.rows[0]
     }
@@ -118,6 +118,7 @@ class Review {
     }
 
     /* ---- Helper ---- */
+    
     // If no id is passed, throw an error...
     static async checkForId(id) {
         if(!id) { throw new BadRequestError('No ID') }
