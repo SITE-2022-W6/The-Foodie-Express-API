@@ -50,7 +50,7 @@ CREATE TABLE items (
 CREATE TABLE reviews (
   id SERIAL PRIMARY KEY,
   user_id INTEGER NOT NULL,
-  restaurant_id INTEGER NOT NULL,
+  restaurant_id TEXT NOT NULL,
   menu_item_name TEXT NOT NULL,
   rating INTEGER NOT NULL,
   content TEXT,
@@ -58,7 +58,7 @@ CREATE TABLE reviews (
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_DATE
   --For testing and demo purposes, comment out FOREIGN KEYs
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-  FOREIGN KEY (restaurant_id) REFERENCES restaurants(id) ON DELETE CASCADE
+  FOREIGN KEY (restaurant_id) REFERENCES restaurants(OpenMenu_id) ON DELETE CASCADE
 );
 
 CREATE TABLE preferences (

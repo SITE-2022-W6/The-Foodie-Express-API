@@ -23,4 +23,37 @@ router.post('/register', async (req, res, next) => {
   }
 });
 
+
+router.put('/update', async (req, res, next) => {
+  try {
+    await User.update(req.query.id, req.query.column, req.body)
+    return res.status(200).json({ "Update Status":"Successful"} )
+  }
+  catch (err)
+  {
+    next(err)
+  }
+})
+
+router.get('/user', async (req, res, next) => {
+  try {
+    const user = await User.fetchUserByEmail(req.query.email)
+    return user
+  }
+  catch (err)
+  {
+    next(err)
+  }
+})
+
+router.get('/id', async (req, res, next) => {
+  try {
+    const user = await User.fetchUserByUserId(req.query.userId);
+    return res.status(200).json({ user });
+  } catch (err) {
+    next(err);
+  }
+});
+
+
 module.exports = router;
