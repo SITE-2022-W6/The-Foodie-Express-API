@@ -74,7 +74,14 @@ class User {
   }
 
   static async update(id, column, body) {
-    await db.query(`UPDATE users SET $1=$2 WHERE id=$3`, [column, body[column], id])
+    await db.query(`
+    UPDATE 
+      users 
+    SET 
+      `+column+` = $1 
+    WHERE 
+      id=$2`,
+    [body[column], id])
   }
 
   static async fetchUserByEmail(email) {

@@ -26,6 +26,7 @@ router.post('/register', async (req, res, next) => {
 router.put('/update', async (req, res, next) => {
   try {
     await User.update(req.query.id, req.query.column, req.body)
+    return res.status(200).json({ "Update Status":"Successful"} )
   }
   catch (err)
   {
