@@ -100,13 +100,14 @@ class Review {
 
     // Return a user's reviews
     static async getReviews(userId) {
+        console.log(userId)
         const result = await db.query(`
             SELECT * FROM reviews
             WHERE user_id=$1 
             ORDER BY created_at DESC`, 
             [userId]
         )
-
+        console.log(result.rows)
         return result.rows
     }
 
