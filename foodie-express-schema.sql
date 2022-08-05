@@ -21,7 +21,7 @@ CREATE TABLE restaurants (
   operating_days TEXT NOT NULL,
   operating_days_printable TEXT NOT NULL,
   restaurant_verbose JSON NOT NULL,
-  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_DATE
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE menus (
@@ -30,7 +30,7 @@ CREATE TABLE menus (
   menu_name TEXT,
   menu_description TEXT,
   menu_verbose JSON NOT NULL,
-  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_DATE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (restaurant_id) REFERENCES restaurants(id) ON DELETE CASCADE
 );
 --previously "menu JSON NOT NULL" in menus, now has a dedicated table
@@ -43,7 +43,7 @@ CREATE TABLE items (
   price INTEGER,
   calories INTEGER,
   item_verbose JSON NOT NULL,
-  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_DATE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (menu_id) REFERENCES menus(id) ON DELETE CASCADE
 );
 
@@ -67,6 +67,6 @@ CREATE TABLE preferences (
   cuisine TEXT NOT NULL,
   rating INTEGER NOT NULL, 
   quantity INTEGER DEFAULT 1,
-  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_DATE,
-  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+  --FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 )
