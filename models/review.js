@@ -45,7 +45,10 @@ class Review {
             values
         )
         
-        Preference.setPreference(result.user_id, result.menu_item_name, result.rating)
+        let pref = await Preference.setPreference(result.rows[0].user_id, result.rows[0].menu_item_name, result.rows[0].rating)
+
+        console.log(pref)
+
         // Return our db entry...
         return result.rows[0]
     }
@@ -92,7 +95,8 @@ class Review {
             FROM 
                 reviews
             LEFT JOIN users ON reviews.user_id = users.id
-            WHERE reviews.restaurant_id = $1 AND reviews.menu_item_name = $2`, 
+            WHERE reviews.restaurant_id = $1 AND reviews.menu_item_name = $2 
+            ORDER BY created_at DESC`, 
             [restaurantId, itemName])
 
         return results.rows
