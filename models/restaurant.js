@@ -103,7 +103,6 @@ class Restaurant {
     
     // Checks database for restaurant, if it can't find it, makes call to api
     static async getMenuByRestaurantName(restaurantName, city='', postal_code=0) {
-        //console.log("getMenuByRestaurantName: ", restaurantName, city, postal_code)
         const result = await db.query(
             `SELECT menus.menu_verbose 
             FROM restaurants  
@@ -111,7 +110,7 @@ class Restaurant {
                 ON restaurants.id=menus.restaurant_id
             WHERE LOWER(restaurants.name) LIKE '%${restaurantName.replace(/[^a-zA-Z0-9 ]/g, '')}%'`
         )
-        // console.log("db results: ", result.rows)
+
         if(result.rows.length>0) {
             const menu = result.rows.map((menu_verbose) =>
                 {
@@ -119,7 +118,6 @@ class Restaurant {
                 })
             return menu
         } else {
-            //console.log("db has no such entry, resorting to api calls: ")
             const apiRestaurantId = await this.apiSearchForRestaurantByName(restaurantName, city, postal_code)
             if(!apiRestaurantId) { throw new BadRequestError("No restaurant id found") }
             const apiRestaurant = await this.apiRestaurantInfo(apiRestaurantId)
@@ -153,7 +151,6 @@ class Restaurant {
             WHERE restaurants.OpenMenu_id = $1`,
             [OMId]
         )
-        //console.log("db results: ", result.rows)
         if(result.rows.length>0) {
             const restaurant_verbose = await db.query(
                 `SELECT restaurant_verbose
@@ -161,7 +158,6 @@ class Restaurant {
                 WHERE restaurants.OpenMenu_id = $1`,
                 [OMId]
             )
-            // console.log("restaurant_info: ",restaurant_verbose.rows[0].restaurant_verbose.restaurant_info)
             const restaurant_info = restaurant_verbose.rows[0].restaurant_verbose.restaurant_info
             const environment_info = restaurant_verbose.rows[0].restaurant_verbose.environment_info
             const menu = result.rows.map((menu_verbose) =>
