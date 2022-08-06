@@ -44,10 +44,17 @@ class Review {
              RETURNING *`,
             values
         )
-        
-        let pref = await Preference.setPreference(result.rows[0].user_id, result.rows[0].menu_item_name, result.rows[0].rating)
+        console.log(parseInt(result.rows[0].restaurant_id))
+        const restPrimCuis = await db.query(
+            `SELECT CUISINE_TYPE_PRIMARY 
+            FROM restaurants
+            WHERE id=$1`,
+            [parseInt(result.rows[0].restaurant_id)]
+        )
+        console.log(restPrimCuis.rows)
+        //let pref = await Preference.setPreference(result.rows[0].user_id, restPrimCuis.rows[0], result.rows[0].rating)
 
-        console.log(pref)
+        //console.log(pref)
 
         // Return our db entry...
         return result.rows[0]
