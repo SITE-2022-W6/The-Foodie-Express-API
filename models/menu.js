@@ -74,8 +74,7 @@ class Menu {
             JOIN menus ON restaurants.id=menus.restaurant_id
             JOIN items ON menus.id=items.menu_id
         WHERE restaurants.OpenMenu_id = $1
-              AND items.name = $2 
-        ORDER BY created_at DESC`, [restaurantId, itemName])
+              AND items.name = $2 `, [restaurantId, itemName])
         return result.rows[0]
     }
 

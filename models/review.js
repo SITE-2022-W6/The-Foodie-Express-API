@@ -54,7 +54,9 @@ class Review {
         console.log(restPrimCuis.rows)
         //let pref = await Preference.setPreference(result.rows[0].user_id, restPrimCuis.rows[0], result.rows[0].rating)
 
+
         //console.log(pref)
+
 
         // Return our db entry...
         return result.rows[0]
@@ -103,7 +105,7 @@ class Review {
                 reviews
             LEFT JOIN users ON reviews.user_id = users.id
             WHERE reviews.restaurant_id = $1 AND reviews.menu_item_name = $2 
-            ORDER BY created_at DESC`, 
+            ORDER BY reviews.created_at DESC`, 
             [restaurantId, itemName])
 
         return results.rows
@@ -111,14 +113,14 @@ class Review {
 
     // Return a user's reviews
     static async getReviews(userId) {
-        console.log(userId)
+        // console.log(userId)
         const result = await db.query(`
             SELECT * FROM reviews
             WHERE user_id=$1 
             ORDER BY created_at DESC`, 
             [userId]
         )
-        console.log(result.rows)
+        // console.log(result.rows)
         return result.rows
     }
 
