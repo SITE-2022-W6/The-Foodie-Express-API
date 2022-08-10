@@ -201,6 +201,19 @@ class Restaurant {
 
         return result.rows[0]
     }
+
+    static async getAverageRating (OMId) {
+        const rating = await db.query(`
+        SELECT
+            AVG(rating)
+        FROM 
+            reviews
+        WHERE
+            restaurant_id = $1
+        `, [OMId])
+
+        return rating.rows[0]
+    }
 }
 
 module.exports = Restaurant

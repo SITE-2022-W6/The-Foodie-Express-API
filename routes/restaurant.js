@@ -75,4 +75,14 @@ router.get('/OMId', async (req, res, next) => {
     }
 })
 
+router.get('/rating', async (req, res, next) => {
+    try {
+        const rating = await Restaurant.getAverageRating(req.query.OMId)
+        return res.status(200).json({rating})
+    } catch(err) {
+
+        next(err)
+    }
+})
+
 module.exports = router;
