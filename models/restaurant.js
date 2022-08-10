@@ -11,6 +11,15 @@ class Restaurant {
     // Given data and returnType, insert a restaurant into our db
     // returntype is either "menu" or "restaurant"
     // Return portions or all of the inserted data, depending on returntype
+
+    static async getRestById(id) {
+        const result = await db.query(`
+        SELECT id, name, cuisine_type_primary
+        FROM restaurants
+        WHERE id = ${id}`)
+
+        return result.rows[0]
+    }
     static async addRestaurantToDb(data, returntype) {
         // Set restaurant values
         let OpenMenu_id = data.id
