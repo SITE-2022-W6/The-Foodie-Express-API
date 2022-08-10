@@ -11,9 +11,9 @@ router.get('/', async (req, res) => {
 // Find restaurant info provided an ID
 //First checks database to see if restaurant is already in database,
 //if it is not, makes a call to api and stores the data
-router.get('/:id', async (req, res, next ) => {
+router.get('/id', async (req, res, next ) => {
     try {
-        const info = await Restaurant.getRestById(req.params.id)
+        const info = await Restaurant.getRestById(req.query.id)
         res.status(200).json({ "restaurant info: ": info})
     } catch(e) {
         next(e)
@@ -59,6 +59,16 @@ router.get('/search', async (req, res, next) => {
     try {
         const menu = await Restaurant.getMenuByOpenMenuId(req.query.OMId)
         return res.status(200).json({menu})
+    } catch(err) {
+
+        next(err)
+    }
+})
+
+router.get('/OMId', async (req, res, next) => {
+    try {
+        const id = await Restaurant.getIdFromOpenMenuId(req.query.OMId)
+        return res.status(200).json({id})
     } catch(err) {
 
         next(err)

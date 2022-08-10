@@ -188,6 +188,19 @@ class Restaurant {
         const results = await axios.get(`https://openmenu.com/api/v2/location.php?key=${OM_API_KEY}&country=us&state=${state}&city=${city}&offset=${offset}`)
         return {status: results.data.response.api.status, restaurants: results.data.response.result.restaurants}
     }
+
+    static async getIdFromOpenMenuId (OMId) {
+        const result = await db.query(`
+        SELECT
+            id
+        FROM
+            restaurants
+        WHERE
+            OpenMenu_id = $1
+        `, [OMId])
+
+        return result.rows[0]
+    }
 }
 
 module.exports = Restaurant

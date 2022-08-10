@@ -50,7 +50,10 @@ CREATE TABLE items (
 CREATE TABLE reviews (
   id SERIAL PRIMARY KEY,
   user_id INTEGER NOT NULL,
+  -- OpenMenuId
   restaurant_id TEXT NOT NULL,
+  -- DatabaseId
+  rest_id INTEGER NOT NULL,
   menu_item_name TEXT NOT NULL,
   rating INTEGER NOT NULL,
   content TEXT,
