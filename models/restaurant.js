@@ -11,6 +11,15 @@ class Restaurant {
     // Given data and returnType, insert a restaurant into our db
     // returntype is either "menu" or "restaurant"
     // Return portions or all of the inserted data, depending on returntype
+
+    static async getRestById(id) {
+        const result = await db.query(`
+        SELECT id, name, cuisine_type_primary
+        FROM restaurants
+        WHERE id = ${id}`)
+
+        return result.rows[0]
+    }
     static async addRestaurantToDb(data, returntype) {
         // Set restaurant values
         let OpenMenu_id = data.id
@@ -178,6 +187,19 @@ class Restaurant {
     static async getRestaurantsByLocation(state, city, offset) {
         const results = await axios.get(`https://openmenu.com/api/v2/location.php?key=${OM_API_KEY}&country=us&state=${state}&city=${city}&offset=${offset}`)
         return {status: results.data.response.api.status, restaurants: results.data.response.result.restaurants}
+    }
+
+    static async getIdFromOpenMenuId (OMId) {
+        const result = await db.query(`
+        SELECT
+            id
+        FROM
+            restaurants
+        WHERE
+            OpenMenu_id = $1
+        `, [OMId])
+
+        return result.rows[0]
     }
 }
 

@@ -9,7 +9,7 @@ class Review {
     // Create a review, given an object with specific keys and values.
     static async createReview(content) {
         // Set fields our table, reviews, both requires and accepts...
-        const requiredFields = ["user_id", "restaurant_id", "menu_item_name", "rating"]
+        const requiredFields = ["user_id", "restaurant_id", "rest_id", "menu_item_name", "rating"]
         const optionalFields = ["content"]
 
         // Arrays for building our db query...
@@ -44,18 +44,18 @@ class Review {
              RETURNING *`,
             values
         )
-        console.log(parseInt(result.rows[0].restaurant_id))
+        console.log(parseInt(result.rows[0].rest_id))
         const restPrimCuis = await db.query(
-            `SELECT CUISINE_TYPE_PRIMARY 
-            FROM restaurants
-            WHERE id=$1`,
-            [parseInt(result.rows[0].restaurant_id)]
+            `SELECT id, name, cuisine_type_primary
+            FROM restaurants 
+            WHERE id=$1`, 
+            [parseInt(result.rows[0].rest_id)]
         )
-        console.log(restPrimCuis.rows)
-        //let pref = await Preference.setPreference(result.rows[0].user_id, restPrimCuis.rows[0], result.rows[0].rating)
+        console.log("primCuis", restPrimCuis.rows[0].cuisine_type_primary)
+        let pref = await Preference.setPreference(result.rows[0].user_id, restPrimCuis.rows[0].cuisine_type_primary, result.rows[0].rating)
 
 
-        //console.log(pref)
+        console.log(pref)
 
 
         // Return our db entry...

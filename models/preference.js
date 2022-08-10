@@ -97,6 +97,8 @@ class Preference {
 
     static async favoriteCuisine(userId) {
         let preferences = await this.retrievePreferences(userId)
+        console.log(userId)
+        console.log(preferences)
         let favoriteCuisine = {}
 
         let updateFavoriteCuisine = (cuisine, rating, quantity) => {
