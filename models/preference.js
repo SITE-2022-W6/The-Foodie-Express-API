@@ -26,15 +26,16 @@ class Preference {
 
     // Given: userId, cuisine, and rating
     // Update an entry in table preferences.
-    static async updatePreference(userId, cuisine, rating) {
+    // ad is 1 when creating a review and -1 when deleting a review
+    static async updatePreference(userId, cuisine, rating, ad) {
         // Try updating an entry in db...
         try {
             const result = await db.query(`
                 UPDATE preferences 
-                SET rating=rating+$1, quantity=quantity+1 
+                SET rating=rating+$1, quantity=quantity+$4 
                 WHERE user_id=$2 AND cuisine=$3 
                 RETURNING *`, 
-                [rating, userId, cuisine]
+                [rating, userId, cuisine, ad]
             )
             // Return the updated entry...
             return result.rows
@@ -75,7 +76,8 @@ class Preference {
 
     // Given: userId, cuisine, rating
     // Either create a new user preference or update an existing one
-    static async setPreference(userId, cuisine, rating) {
+    // ad is 1 when creating a review and -1 when deleting a review
+    static async setPreference(userId, cuisine, rating, ad) {
         let pref = {}
 
         const result = await db.query(`
@@ -87,7 +89,7 @@ class Preference {
         // Creates a new entry or updates an existing one
         // Calls the appropriate function...
         if(result.rows.length>0) {
-            pref = this.updatePreference(userId, cuisine, rating)
+            pref = this.updatePreference(userId, cuisine, rating, ad)
         } else {
             pref = this.createPreference(userId, cuisine, rating)
         }
@@ -97,8 +99,8 @@ class Preference {
 
     static async favoriteCuisine(userId) {
         let preferences = await this.retrievePreferences(userId)
-        console.log(userId)
-        console.log(preferences)
+        // console.log(userId)
+        // console.log(preferences)
         let favoriteCuisine = {}
 
         let updateFavoriteCuisine = (cuisine, rating, quantity) => {

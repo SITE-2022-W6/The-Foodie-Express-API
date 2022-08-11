@@ -52,7 +52,7 @@ class Review {
             [parseInt(result.rows[0].rest_id)]
         )
         // console.log("primCuis", restPrimCuis.rows[0].cuisine_type_primary)
-        let pref = await Preference.setPreference(result.rows[0].user_id, restPrimCuis.rows[0].cuisine_type_primary, result.rows[0].rating)
+        let pref = await Preference.setPreference(result.rows[0].user_id, restPrimCuis.rows[0].cuisine_type_primary, result.rows[0].rating, 1)
 
 
         // console.log(pref)
@@ -129,6 +129,21 @@ class Review {
     // Given a review id, delete an id
     static async deleteReview(id) {
         this.checkForId(id)
+
+        //Update preferences
+        const review = await db.query(`SELECT * FROM reviews WHERE id=$1`, [id])
+        const rest_id = review.rows[0].rest_id
+
+        const restPrimCuis = await db.query(
+            `SELECT id, name, cuisine_type_primary
+            FROM restaurants 
+            WHERE id=$1`, 
+            [parseInt(rest_id)]
+        )
+
+        let pref = await Preference.setPreference(review.rows[0].user_id, restPrimCuis.rows[0].cuisine_type_primary, 0-review.rows[0].rating, -1)
+
+
         await db.query(`DELETE FROM reviews WHERE reviews.id=$1`, [id])
     }
 

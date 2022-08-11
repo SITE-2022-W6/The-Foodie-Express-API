@@ -5,7 +5,7 @@ const Preference = require("../models/preference")
 
 router.post('/set-preference', async (req, res, next) => {
     try {
-        const preference = await Preference.setPreference(parseInt(req.body.userId), req.body.cuisine, parseInt(req.body.rating))
+        const preference = await Preference.setPreference(parseInt(req.body.userId), req.body.cuisine, parseInt(req.body.rating), parseInt(req.body.ad))
         res.status(200).json( preference )
     } catch(e) {
         next(e)
